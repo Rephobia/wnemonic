@@ -7,8 +7,8 @@ use Illuminate\Support\Facades\Storage;
 class FileStorage
 {
     const dir_word_size = 2;
-    
-    public static function nameHash($filename) : string
+        
+    public static function nameHash(string $filename) : string
     {
         $hashed_name = self::hash($filename);
         $first_dir = substr($hashed_name, 0, self::dir_word_size);
@@ -20,18 +20,25 @@ class FileStorage
         return $path;
     }
     
-    public static function save_file($file) : void
+    public static function saveFile($file) : void
     {
         $path = self::nameHash($file->getClientOriginalName());
         
-        Storage::putFileAs("files", $file, $path);
+        Storage::disk("local")->putFileAs("/public", $file, $path);
     }
-    
-    private static function hash($filename) : string
+
+    public static function getExtension(string $filename) : string
     {
-        $name = md5($filename);
         $spl = new \SplFileInfo($filename);
         $extension = $spl->getExtension();
+        
+        return $extension;
+    }
+        
+    private static function hash(string $filename) : string
+    {
+        $name = md5($filename);
+        $extension = self::getExtension($filename);
         
         if (!empty($extension)) {
             
