@@ -1,6 +1,7 @@
 <?php
 
 namespace App;
+use Illuminate\Support\Facades\Storage;
 
 
 class File
@@ -20,15 +21,10 @@ class File
         $object->data->name = $file->getClientOriginalName();
         $object->data->save();
       
-        FileStorage::save_file($file);
+        FileStorage::saveFile($file);
         
         return $object;
     }
-    
-    // public static function exists(string $filename) : bool
-    // {
-    //     return FileDetail::where("name", "=", $filename)->exists();
-    // }
 
     public static function get(string $filename) : ?File
     {
@@ -58,6 +54,26 @@ class File
     public function name() : string
     {
         return $this->data->name;
+    }
+
+    public function path() : string
+    {
+        return FileStorage::nameHash($this->data->name);
+    }
+    
+    public function link() : string
+    {
+        return Storage::disk("public")->url(self::path());
+    }
+    
+    public function content() : string
+    {
+        return Storage::disk("public")->get(self::path());
+    }
+    
+    public function type() : string
+    {
+        return Storage::disk("public")->mimeType(self::path());
     }
     
     private $data;
