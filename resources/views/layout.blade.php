@@ -6,9 +6,13 @@
     </head>
     <body>
 	
-	<div class="error_message">
-	    {{ $errors }}
-	</div>
+	@if ($errors->any())
+	    <div id="error">
+		@foreach ($errors->all() as $error)
+		    <li>{{ $error }}</li>
+		@endforeach
+	    </div>
+	@endif
 	
 	@include("loader")
 
