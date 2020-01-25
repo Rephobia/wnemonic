@@ -59,13 +59,14 @@ class FileController extends Controller
     
     public function rename(Request $request)
     {
-        $rules = ["name" => "required"];
-
+        $rules = ["name" => "required",
+                  "newname" => "required"];
+                
         $this->validate($request, $rules);
         $filename = $request->input("name");
-
-        return redirect()->back();
-
+        $newname = $request->input("newname");
+        $file = \App\FileStorage::rename($filename, $newname);
+        
+        return view("file")->with("file", $file);
     }
-
 }
