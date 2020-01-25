@@ -3,7 +3,16 @@
 @section("title", $file->name())
 
     @section("content")
-	
 	<p> {{ $file->name() }} </p>
-    
-@endsection
+	
+	@php
+	$renderpath = "filerender/".$file->type();
+	@endphp
+
+	@if(View::exists($renderpath))
+	    @include($renderpath, ["file" => $file])
+	@else
+	    <p> Specified type of "{{ $file->type() }}" is not supported for showing </p>
+	@endif
+
+    @endsection
