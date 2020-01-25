@@ -14,5 +14,6 @@
 	@else
 	    <p> Specified type of "{{ $file->type() }}" is not supported for showing </p>
 	@endif
-
+	@include("filemanager", ["file" => $file])
+	
     @endsection
