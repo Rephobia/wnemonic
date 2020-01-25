@@ -6,9 +6,8 @@
     
     @foreach($files as $file)
 	<li>
-	    <a href="{{ url($file->name()) }}"> {{ $file->name() }} </a>
+	    <a href={{ url($file->name()) }}> {{ $file->name() }}</a>
 	</li>
     @endforeach
-    {{Storage::disk("public")->url("")}}
     
 @endsection
