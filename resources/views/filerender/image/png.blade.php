@@ -1,1 +1,1 @@
-<img src="{{ $file->link() }}">
+<img src={{ $file->link() }}>
