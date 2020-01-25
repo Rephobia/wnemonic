@@ -1,0 +1,2 @@
+<pre> {{ $file->content() }} </pre>
+
