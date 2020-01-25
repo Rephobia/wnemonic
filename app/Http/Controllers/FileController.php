@@ -14,7 +14,7 @@ use App\File;
 use App\Rules\UniqueFile;
 
 class FileController extends Controller
-{        
+{
     public function show(string $filename)
     {
         $file = File::get($filename);
@@ -45,4 +45,27 @@ class FileController extends Controller
         
         return $this->show_all();
     }
+    
+    public function delete(Request $request)
+    {
+        $rules = ["name" => "required"];
+
+        $this->validate($request, $rules);
+        $filename = $request->input("name");
+        \App\FileStorage::delete($filename);
+        
+        return $this->show_all();
+    }
+    
+    public function rename(Request $request)
+    {
+        $rules = ["name" => "required"];
+
+        $this->validate($request, $rules);
+        $filename = $request->input("name");
+
+        return redirect()->back();
+
+    }
+
 }

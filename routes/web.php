@@ -26,10 +26,8 @@ Route::get('/search', function ()
 Route::get('/{filename}', "FileController@show");
 
 
-Route::post("/", "FileController@add");
+Route::post("/add", "FileController@add");
+Route::post("/delete", "FileController@delete");
+Route::post("/rename", "FileController@rename");
 
 
-// Route::get('/testing/{id}',[
-     // 'uses' => 'TestController@testMethod', 
-     // 'as' => 'test.route'
-// ]);
