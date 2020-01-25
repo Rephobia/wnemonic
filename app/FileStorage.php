@@ -34,12 +34,34 @@ class FileStorage
         
         return $extension;
     }
+    
+    public static function delete(string $filename)
+    {
+        $file_detail = \App\FileDetail::where("name", "=", $filename)->first();
+        $path = self::nameHash($file_detail->name);
+        Storage::disk("local")->delete("public/".$path);
+        $file_detail->delete();
+    }
+    
+    public static function rename(string $filename, string $newname)
+    {
+        $file_detail = \App\FileDetail::where("name", "=", $filename)->first();
+        $file_detail->name = $newname;
+        $file_detail->save();
         
+        $oldpath = self::nameHash($filename);
+        $newpath = self::nameHash($newname);
+
+        Storage::disk("local")->move("public/".$oldpath, "public/".$newpath);
+        return File::fromDB($file_detail);
+    }
+    
+    
     private static function hash(string $filename) : string
     {
         $name = md5($filename);
         $extension = self::getExtension($filename);
-        
+
         if (!empty($extension)) {
             
             $name .= ".".$extension;
@@ -47,5 +69,5 @@ class FileStorage
         }
 
         return $name;
-    }
+    }    
 }

@@ -15,17 +15,6 @@ use App\Rules\UniqueFile;
 
 class FileController extends Controller
 {
-    // /*
-    // |--------------------------------------------------------------------------
-    // | Confirm Password Controller
-    // |--------------------------------------------------------------------------
-    // |
-    // | This controller is responsible for handling password confirmations and
-    // | uses a simple trait to include the behavior. You're free to explore
-    // | this trait and override any functions that require customization.
-    // |
-    // */
-
     public function show(string $filename)
     {
         $file = File::get($filename);
@@ -40,9 +29,7 @@ class FileController extends Controller
     public function show_all()
     {
         $files = File::all();
-        // echo $files;
         return view("main")->with("files", $files);
-        // return \View::make("main")->with("files", $files);
     }
  
     public function add(Request $request)
@@ -57,5 +44,29 @@ class FileController extends Controller
         }
         
         return $this->show_all();
+    }
+    
+    public function delete(Request $request)
+    {
+        $rules = ["name" => "required"];
+
+        $this->validate($request, $rules);
+        $filename = $request->input("name");
+        \App\FileStorage::delete($filename);
+        
+        return $this->show_all();
+    }
+    
+    public function rename(Request $request)
+    {
+        $rules = ["name" => "required",
+                  "newname" => "required"];
+                
+        $this->validate($request, $rules);
+        $filename = $request->input("name");
+        $newname = $request->input("newname");
+        $file = \App\FileStorage::rename($filename, $newname);
+        
+        return view("file")->with("file", $file);
     }
 }
