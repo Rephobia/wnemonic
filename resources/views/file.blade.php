@@ -4,6 +4,15 @@
 
     @section("content")
 	<p> {{ $file->name() }} </p>
-	@includeif("filerender/".$file->type(),	["file" => $file])
 	
+	@php
+	$renderpath = "filerender/".$file->type();
+	@endphp
+
+	@if(View::exists($renderpath))
+	    @include($renderpath, ["file" => $file])
+	@else
+	    <p> Specified type of "{{ $file->type() }}" is not supported for showing </p>
+	@endif
+
     @endsection
