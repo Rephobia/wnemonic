@@ -29,9 +29,7 @@ class FileController extends Controller
     public function show_all()
     {
         $files = File::all();
-        // echo $files;
         return view("main")->with("files", $files);
-        // return \View::make("main")->with("files", $files);
     }
  
     public function add(Request $request)
