@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Input;
 
 use App\File;
 use App\Http\Requests\NewFile;
+use App\Http\Requests\RenameFile;
+
 
 class FileController extends Controller
 {
@@ -51,15 +53,14 @@ class FileController extends Controller
         return redirect("/");
     }
     
-    public function rename(Request $request)
+    public function rename(RenameFile $request)
     {
-        $rules = ["name" => "required",
-                  "newname" => "required"];
-                
-        $this->validate($request, $rules);
         $filename = $request->input("name");
         $newname = $request->input("newname");
-        \App\FileStorage::rename($filename, $newname);
+        
+        if ($filename !== $newname) {
+            \App\FileStorage::rename($filename, $newname);
+        }
         
         return redirect("/".$newname);
     }
