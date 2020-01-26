@@ -11,18 +11,7 @@
 |
 */
 
-// Route::get('/', function () {
-    // return view("main");
-// });
-
-
-Route::get('/', "FileController@show_all");
-
-Route::get('/search', function ()
-{
-    return view("search");
-});
-
+Route::get('/', "FileController@showAll");
 Route::get('/{filename}', "FileController@show");
 
 

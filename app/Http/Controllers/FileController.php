@@ -11,10 +11,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 
 use App\File;
-use App\Rules\UniqueFile;
+use App\Http\Requests\NewFile;
 
 class FileController extends Controller
 {
+
     public function show(string $filename)
     {
         $file = File::get($filename);
@@ -25,22 +26,16 @@ class FileController extends Controller
         return view("file")->with("file", $file);
     }
 
-    public function show_all()
+    public function showAll()
     {
         $files = File::all();
         return view("main")->with("files", $files);
     }
  
-    public function add(Request $request)
+    public function add(NewFile $request)
     {
-        $rules = ["name" => new UniqueFile];
-        $this->validate($request, $rules);
-
-        if ($request->hasFile("name")) {
-            $fileform = $request->file("name");
-
-            $file = File::fromForm($fileform);
-        }
+        $fileform = $request->file("name");
+        $file = File::fromForm($fileform);
         
         return redirect()->back();
     }
