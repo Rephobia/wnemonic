@@ -53,7 +53,6 @@ class FileStorage
         $newpath = self::nameHash($newname);
 
         Storage::disk("local")->move("public/".$oldpath, "public/".$newpath);
-        return File::fromDB($file_detail);
     }
     
     

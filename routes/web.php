@@ -29,5 +29,3 @@ Route::get('/{filename}', "FileController@show");
 Route::post("/add", "FileController@add");
 Route::post("/delete", "FileController@delete");
 Route::post("/rename", "FileController@rename");
-
-

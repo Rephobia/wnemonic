@@ -18,7 +18,6 @@ class FileController extends Controller
     public function show(string $filename)
     {
         $file = File::get($filename);
-        
         if ($file === NULL) {
             abort(404);
         }
@@ -43,7 +42,7 @@ class FileController extends Controller
             $file = File::fromForm($fileform);
         }
         
-        return $this->show_all();
+        return redirect()->back();
     }
     
     public function delete(Request $request)
@@ -54,7 +53,7 @@ class FileController extends Controller
         $filename = $request->input("name");
         \App\FileStorage::delete($filename);
         
-        return $this->show_all();
+        return redirect("/");
     }
     
     public function rename(Request $request)
@@ -65,8 +64,8 @@ class FileController extends Controller
         $this->validate($request, $rules);
         $filename = $request->input("name");
         $newname = $request->input("newname");
-        $file = \App\FileStorage::rename($filename, $newname);
+        \App\FileStorage::rename($filename, $newname);
         
-        return view("file")->with("file", $file);
+        return redirect("/".$newname);
     }
 }
