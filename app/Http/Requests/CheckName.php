@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 
 use App\Utils\Constants\FileName;
 
-class RenameFile extends FormRequest
+class CheckName extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,18 +25,6 @@ class RenameFile extends FormRequest
      */
     public function rules() : array
     {
-        $basicRules = FileName::rules();
-        
-        $rules = array(FileName::nameField() => $basicRules,
-                       FileName::newnameField() => $basicRules);
-
-        return $rules;
-    }
-    
-    public function attributes() : array
-    {
-        return [
-            FileName::newnameField() => "new name"
-        ];
-    }
+        return array(FileName::nameField() => FileName::rules());
+    }        
 }

@@ -11,13 +11,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 
 use App\File;
+use App\Http\Requests\CheckName;
 use App\Http\Requests\NewFile;
 use App\Http\Requests\RenameFile;
 
 
 class FileController extends Controller
 {
-
     public function show(string $filename)
     {
         $file = File::get($filename);
@@ -42,11 +42,8 @@ class FileController extends Controller
         return redirect()->back();
     }
     
-    public function delete(Request $request)
+    public function delete(CheckName $request)
     {
-        $rules = ["name" => "required"];
-
-        $this->validate($request, $rules);
         $filename = $request->input("name");
         \App\FileStorage::delete($filename);
         
