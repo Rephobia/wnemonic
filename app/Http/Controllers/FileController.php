@@ -11,7 +11,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 
 use App\File;
-use App\Rules\UniqueFile;
+use App\Http\Requests\CheckName;
+use App\Http\Requests\NewFile;
+use App\Http\Requests\RenameFile;
+
 
 class FileController extends Controller
 {
@@ -25,46 +28,36 @@ class FileController extends Controller
         return view("file")->with("file", $file);
     }
 
-    public function show_all()
+    public function showAll()
     {
         $files = File::all();
         return view("main")->with("files", $files);
     }
  
-    public function add(Request $request)
+    public function add(NewFile $request)
     {
-        $rules = ["name" => new UniqueFile];
-        $this->validate($request, $rules);
-
-        if ($request->hasFile("name")) {
-            $fileform = $request->file("name");
-
-            $file = File::fromForm($fileform);
-        }
+        $fileform = $request->file("name");
+        $file = File::fromForm($fileform);
         
         return redirect()->back();
     }
     
-    public function delete(Request $request)
+    public function delete(CheckName $request)
     {
-        $rules = ["name" => "required"];
-
-        $this->validate($request, $rules);
         $filename = $request->input("name");
         \App\FileStorage::delete($filename);
         
         return redirect("/");
     }
     
-    public function rename(Request $request)
+    public function rename(RenameFile $request)
     {
-        $rules = ["name" => "required",
-                  "newname" => "required"];
-                
-        $this->validate($request, $rules);
         $filename = $request->input("name");
         $newname = $request->input("newname");
-        \App\FileStorage::rename($filename, $newname);
+        
+        if ($filename !== $newname) {
+            \App\FileStorage::rename($filename, $newname);
+        }
         
         return redirect("/".$newname);
     }
