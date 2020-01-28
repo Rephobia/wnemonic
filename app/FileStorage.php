@@ -3,6 +3,9 @@
 namespace App;
 
 use Illuminate\Support\Facades\Storage;
+use App\FileDetail;
+use App\Literal;
+
 
 class FileStorage
 {
@@ -24,7 +27,7 @@ class FileStorage
     {
         $path = self::nameHash($file->getClientOriginalName());
         
-        Storage::disk("local")->putFileAs("/public", $file, $path);
+        Storage::putFileAs(".", $file, $path);
     }
 
     public static function getExtension(string $filename) : string
@@ -37,22 +40,22 @@ class FileStorage
     
     public static function delete(string $filename)
     {
-        $file_detail = \App\FileDetail::where("name", "=", $filename)->first();
+        $file_detail = FileDetail::where(Literal::nameField(), "=", $filename)->first();
         $path = self::nameHash($file_detail->name);
-        Storage::disk("local")->delete("public/".$path);
+        Storage::delete($path);
         $file_detail->delete();
     }
     
     public static function rename(string $filename, string $newname)
     {
-        $file_detail = \App\FileDetail::where("name", "=", $filename)->first();
+        $file_detail = FileDetail::where(Literal::nameField(), "=", $filename)->first();
         $file_detail->name = $newname;
         $file_detail->save();
         
         $oldpath = self::nameHash($filename);
         $newpath = self::nameHash($newname);
 
-        Storage::disk("local")->move("public/".$oldpath, "public/".$newpath);
+        Storage::move($oldpath, $newpath);
     }
     
     
@@ -68,5 +71,5 @@ class FileStorage
         }
 
         return $name;
-    }    
+    }
 }

@@ -4,9 +4,9 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+use App\Literal;
 use App\Rules\IsFile;
 use App\Rules\UniqueFile;
-use App\Utils\Constants\FileName;
 
 class NewFile extends FormRequest
 {
@@ -27,8 +27,8 @@ class NewFile extends FormRequest
      */
     public function rules() : array
     {
-        $extendRules = FileName::rules(new IsFile($this), new UniqueFile);
-        $rules = array(FileName::nameField() => $extendRules);
+        $extendRules = Literal::nameRules(new IsFile($this), new UniqueFile);
+        $rules = array(Literal::nameField() => $extendRules);
         return $rules;
     }
 }
