@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-use App\Utils\Constants\FileName;
+use App\Literal;
 
 class CheckName extends FormRequest
 {
@@ -25,6 +25,6 @@ class CheckName extends FormRequest
      */
     public function rules() : array
     {
-        return array(FileName::nameField() => FileName::rules());
+        return array(Literal::nameField() => Literal::nameRules());
     }        
 }

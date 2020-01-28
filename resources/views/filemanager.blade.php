@@ -3,8 +3,8 @@
 
 <form method="post">
     @csrf
-    <input type="hidden" name="name" value={{ $file->name() }}>
-    <input type="text" name="newname" value={{ $file->name() }}>
+    <input type="hidden" name={{ \App\Literal::nameField() }} value={{ $file->name() }}>
+    <input type="text" name={{ \App\Literal::newnameField() }} value={{ $file->name() }}>
     <button type="submit" formaction="/rename">Rename</button>
     <button type="submit" formaction="/delete">Delete</button>
 </form>

@@ -3,14 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-// use App\Providers\RouteServiceProvider;
-// use Illuminate\Foundation\Auth\ConfirmsPasswords;
-// use Illuminate\Routing\Route;
+
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 
+use App\Literal;
 use App\File;
+use App\FileStorage;
+
 use App\Http\Requests\CheckName;
 use App\Http\Requests\NewFile;
 use App\Http\Requests\RenameFile;
@@ -36,7 +37,7 @@ class FileController extends Controller
  
     public function add(NewFile $request)
     {
-        $fileform = $request->file("name");
+        $fileform = $request->file(Literal::nameField());
         $file = File::fromForm($fileform);
         
         return redirect()->back();
@@ -44,19 +45,19 @@ class FileController extends Controller
     
     public function delete(CheckName $request)
     {
-        $filename = $request->input("name");
-        \App\FileStorage::delete($filename);
+        $filename = $request->input(Literal::nameField());
+        FileStorage::delete($filename);
         
         return redirect("/");
     }
     
     public function rename(RenameFile $request)
     {
-        $filename = $request->input("name");
-        $newname = $request->input("newname");
+        $filename = $request->input(Literal::nameField());
+        $newname = $request->input(Literal::newnameField());
         
         if ($filename !== $newname) {
-            \App\FileStorage::rename($filename, $newname);
+            FileStorage::rename($filename, $newname);
         }
         
         return redirect("/".$newname);
