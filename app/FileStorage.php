@@ -3,6 +3,9 @@
 namespace App;
 
 use Illuminate\Support\Facades\Storage;
+use App\FileDetail;
+use App\Literal;
+
 
 class FileStorage
 {
@@ -37,7 +40,7 @@ class FileStorage
     
     public static function delete(string $filename)
     {
-        $file_detail = \App\FileDetail::where("name", "=", $filename)->first();
+        $file_detail = FileDetail::where(Literal::nameField(), "=", $filename)->first();
         $path = self::nameHash($file_detail->name);
         Storage::disk("local")->delete("public/".$path);
         $file_detail->delete();
@@ -45,7 +48,7 @@ class FileStorage
     
     public static function rename(string $filename, string $newname)
     {
-        $file_detail = \App\FileDetail::where("name", "=", $filename)->first();
+        $file_detail = FileDetail::where(Literal::nameField(), "=", $filename)->first();
         $file_detail->name = $newname;
         $file_detail->save();
         
