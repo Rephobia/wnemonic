@@ -27,7 +27,7 @@ class FileStorage
     {
         $path = self::nameHash($file->getClientOriginalName());
         
-        Storage::disk("local")->putFileAs("/public", $file, $path);
+        Storage::putFileAs(".", $file, $path);
     }
 
     public static function getExtension(string $filename) : string
@@ -42,7 +42,7 @@ class FileStorage
     {
         $file_detail = FileDetail::where(Literal::nameField(), "=", $filename)->first();
         $path = self::nameHash($file_detail->name);
-        Storage::disk("local")->delete("public/".$path);
+        Storage::delete($path);
         $file_detail->delete();
     }
     
@@ -55,7 +55,7 @@ class FileStorage
         $oldpath = self::nameHash($filename);
         $newpath = self::nameHash($newname);
 
-        Storage::disk("local")->move("public/".$oldpath, "public/".$newpath);
+        Storage::move($oldpath, $newpath);
     }
     
     
@@ -71,5 +71,5 @@ class FileStorage
         }
 
         return $name;
-    }    
+    }
 }
