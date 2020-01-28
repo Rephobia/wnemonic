@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\Utils\Constants\FileName;
 
 class CreateFilesTable extends Migration
 {
@@ -16,7 +17,7 @@ class CreateFilesTable extends Migration
         Schema::create('files', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->timestamps();
-            $table->string('name')->unique();
+            $table->string(FileName::nameField())->unique();
         });
     }
 

@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-use App\Utils\Constants\FileName;
+use App\Literal;
 
 class RenameFile extends FormRequest
 {
@@ -25,10 +25,10 @@ class RenameFile extends FormRequest
      */
     public function rules() : array
     {
-        $basicRules = FileName::rules();
+        $basicRules = Literal::nameRules();
         
-        $rules = array(FileName::nameField() => $basicRules,
-                       FileName::newnameField() => $basicRules);
+        $rules = array(Literal::nameField() => $basicRules,
+                       Literal::newnameField() => $basicRules);
 
         return $rules;
     }
@@ -36,7 +36,7 @@ class RenameFile extends FormRequest
     public function attributes() : array
     {
         return [
-            FileName::newnameField() => "new name"
+            Literal::newnameField() => "new name"
         ];
     }
 }
