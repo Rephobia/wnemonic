@@ -3,6 +3,8 @@
 namespace App\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
+use App\FileDetail;
+use App\Literal;
 
 class UniqueFile implements Rule
 {
@@ -24,7 +26,7 @@ class UniqueFile implements Rule
     public function passes($attribute, $value)
     {
         $this->filename = $value->getClientOriginalName();
-        return !\App\FileDetail::where("name", "=", $this->filename)->exists();
+        return !FileDetail::where(Literal::nameField(), "=", $this->filename)->exists();
     }
 
     /**
