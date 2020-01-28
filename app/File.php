@@ -2,6 +2,7 @@
 
 namespace App;
 use Illuminate\Support\Facades\Storage;
+use App\Literal;
 
 
 class File
@@ -28,7 +29,7 @@ class File
 
     public static function get(string $filename) : ?File
     {
-        $filedetail = FileDetail::where("name", "=", $filename)->first();
+        $filedetail = FileDetail::where(Literal::nameField(), "=", $filename)->first();
                 
         return empty($filedetail) ? NULL : self::fromDB($filedetail);
     }
