@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Input;
 
 use App\Literal;
 use App\File;
-use App\FileStorage;
+use App\Repository;
 
 use App\Http\Requests\CheckName;
 use App\Http\Requests\NewFile;
@@ -21,7 +21,8 @@ class FileController extends Controller
 {
     public function show(string $filename)
     {
-        $file = File::get($filename);
+        $file = Repository::get($filename);
+        
         if ($file === NULL) {
             abort(404);
         }
@@ -31,14 +32,15 @@ class FileController extends Controller
 
     public function showAll()
     {
-        $files = File::all();
+        $files = Repository::all();
         return view("main")->with("files", $files);
     }
  
     public function add(NewFile $request)
     {
-        $fileform = $request->file(Literal::nameField());
-        $file = File::fromForm($fileform);
+        $file = $request->file(Literal::nameField());
+        
+        Repository::save($file);
         
         return redirect()->back();
     }
@@ -46,7 +48,7 @@ class FileController extends Controller
     public function delete(CheckName $request)
     {
         $filename = $request->input(Literal::nameField());
-        FileStorage::delete($filename);
+        Repository::delete($filename);
         
         return redirect("/");
     }
@@ -57,7 +59,7 @@ class FileController extends Controller
         $newname = $request->input(Literal::newnameField());
         
         if ($filename !== $newname) {
-            FileStorage::rename($filename, $newname);
+            Repository::rename($filename, $newname);
         }
         
         return redirect("/".$newname);
