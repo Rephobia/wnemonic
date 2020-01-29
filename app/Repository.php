@@ -3,9 +3,15 @@
 namespace App;
 
 use Illuminate\Support\Facades\Storage;
-use App\FileDAO;
+use Illuminate\Database\Eloquent\Model;
 use App\Literal;
 use App\Utils\FileInfo;
+
+
+class DataBase extends Model
+{
+    protected $table = "files";
+}
 
 
 class Repository
@@ -21,7 +27,7 @@ class Repository
     {
         $files = array();
         
-        foreach (FileDAO::cursor() as $row) {
+        foreach (DataBase::cursor() as $row) {
 
             array_push($files, new File ($row));
                 
@@ -34,7 +40,7 @@ class Repository
     {
         $filename = $file->getClientOriginalName();
         
-        $data = new FileDAO;
+        $data = new DataBase;
         $data->name = $filename;
         $data->save();
         
@@ -64,9 +70,9 @@ class Repository
         Storage::move($oldpath, $newpath);
     }
     
-    private static function getData(string $filename) : FileDAO
+    private static function getData(string $filename) : ?DataBase
     {
-        $data = FileDAO::where(Literal::nameField(), "=", $filename)->first();
+        $data = DataBase::where(Literal::nameField(), "=", $filename)->first();
 
         return $data;
     }
