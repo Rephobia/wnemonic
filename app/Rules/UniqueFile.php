@@ -3,7 +3,7 @@
 namespace App\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
-use App\FileDAO;
+use App\Repository;
 use App\Literal;
 
 class UniqueFile implements Rule
@@ -26,7 +26,8 @@ class UniqueFile implements Rule
     public function passes($attribute, $value)
     {
         $this->filename = $value->getClientOriginalName();
-        return !FileDAO::where(Literal::nameField(), "=", $this->filename)->exists();
+        
+        return Repository::get($this->filename) === NULL;
     }
 
     /**
