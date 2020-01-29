@@ -3,6 +3,8 @@
 namespace App;
 use Illuminate\Support\Facades\Storage;
 use App\Literal;
+use App\Utils\FileInfo;
+
 
 
 class File
@@ -59,7 +61,7 @@ class File
 
     public function path() : string
     {
-        return FileStorage::nameHash($this->data->name);
+        return FileInfo::hashPath($this->data->name);
     }
     
     public function link() : string
