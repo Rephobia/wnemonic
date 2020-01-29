@@ -3,7 +3,7 @@
 namespace App;
 
 use Illuminate\Support\Facades\Storage;
-use App\FileDetail;
+use App\FileDAO;
 use App\Literal;
 use App\Utils\FileInfo;
 
@@ -21,7 +21,7 @@ class Repository
     {
         $files = array();
         
-        foreach (FileDetail::cursor() as $row) {
+        foreach (FileDAO::cursor() as $row) {
 
             array_push($files, new File ($row));
                 
@@ -34,7 +34,7 @@ class Repository
     {
         $filename = $file->getClientOriginalName();
         
-        $data = new FileDetail;
+        $data = new FileDAO;
         $data->name = $filename;
         $data->save();
         
@@ -64,9 +64,9 @@ class Repository
         Storage::move($oldpath, $newpath);
     }
     
-    private static function getData(string $filename) : FileDetail
+    private static function getData(string $filename) : FileDAO
     {
-        $data = FileDetail::where(Literal::nameField(), "=", $filename)->first();
+        $data = FileDAO::where(Literal::nameField(), "=", $filename)->first();
 
         return $data;
     }
