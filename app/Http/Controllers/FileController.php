@@ -12,7 +12,7 @@ use App\Literal;
 use App\File;
 use App\Repository;
 
-use App\Http\Requests\CheckName;
+use App\Http\Requests\CheckFile;
 use App\Http\Requests\NewFile;
 use App\Http\Requests\RenameFile;
 
@@ -45,7 +45,7 @@ class FileController extends Controller
         return redirect()->back();
     }
     
-    public function delete(CheckName $request)
+    public function delete(CheckFile $request)
     {
         $filename = $request->input(Literal::nameField());
         Repository::delete($filename);
