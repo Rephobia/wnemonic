@@ -5,6 +5,8 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 
 use App\Literal;
+use App\Rules\FileRule;
+
 
 class RenameFile extends FormRequest
 {
@@ -24,11 +26,9 @@ class RenameFile extends FormRequest
      * @return array
      */
     public function rules() : array
-    {
-        $basicRules = Literal::nameRules();
-        
-        $rules = array(Literal::nameField() => $basicRules,
-                       Literal::newnameField() => $basicRules);
+    {        
+        $rules = array(Literal::nameField() => (new FileRule)->exists(),
+                       Literal::newnameField() => (new FileRule)->unique($this));
 
         return $rules;
     }
@@ -39,4 +39,6 @@ class RenameFile extends FormRequest
             Literal::newnameField() => "new name"
         ];
     }
+    
+    protected $redirect = "/";
 }

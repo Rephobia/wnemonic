@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 
 use App\Literal;
+use App\Rules\FileRule;
 
 class CheckFile extends FormRequest
 {
@@ -25,6 +26,8 @@ class CheckFile extends FormRequest
      */
     public function rules() : array
     {
-        return array(Literal::nameField() => Literal::nameRules());
-    }        
+        return array(Literal::nameField() => (new FileRule)->exists());
+    }
+    
+    protected $redirect = "/";
 }
