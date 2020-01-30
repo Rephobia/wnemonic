@@ -4,18 +4,17 @@ namespace App\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
 use App\Repository;
-use App\Literal;
 
-class UniqueFile implements Rule
+class FileExists implements Rule
 {
     /**
      * Create a new rule instance.
      *
      * @return void
      */
-    public function __construct($request)
+    public function __construct()
     {
-        $this->request = $request;
+        //
     }
 
     /**
@@ -27,9 +26,8 @@ class UniqueFile implements Rule
      */
     public function passes($attribute, $value)
     {
-        $isFile = $this->request->hasFile($attribute);
-        $this->filename = $isFile ? $value->getClientOriginalName() : $value;
-        return Repository::get($this->filename) === NULL;
+        $this->filename = $value;
+        return Repository::get($value) !== NULL;
     }
 
     /**
@@ -37,12 +35,10 @@ class UniqueFile implements Rule
      *
      * @return string
      */
-    
     public function message()
     {
-        return "File '{$this->filename}' already exists.";
+        return "File '{$this->filename}' isn't exist.";
     }
     
     private $filename;
-    private $request;
 }
