@@ -7,8 +7,9 @@ use App\Literal;
 use App\Rules\FileRule;
 use App\Http\Requests\BasicRequest;
 
-class NewFile extends BasicRequest
-{    
+
+class CheckFile extends BasicRequest
+{
     /**
      * Get the validation rules that apply to the request.
      *
@@ -16,7 +17,6 @@ class NewFile extends BasicRequest
      */
     public function rules() : array
     {
-        return array(Literal::nameField() => (new FileRule($this))->required()->isFile()->unique());
-    }
-  
+        return array(Literal::nameField() => (new FileRule($this))->required()->exists());
+    }    
 }
