@@ -2,21 +2,12 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-
 use App\Literal;
+use App\Rules\FileRule;
+use App\Http\Requests\BasicRequest;
 
-class RenameFile extends FormRequest
+class RenameFile extends BasicRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
-    {
-        return true;
-    }
 
     /**
      * Get the validation rules that apply to the request.
@@ -25,11 +16,16 @@ class RenameFile extends FormRequest
      */
     public function rules() : array
     {
-        $basicRules = Literal::nameRules();
+        $nameRules = (new FileRule($this))->required()->exists();
         
-        $rules = array(Literal::nameField() => $basicRules,
-                       Literal::newnameField() => $basicRules);
-
+        $newnameRules = (new FileRule($this))
+                      ->required()
+                      ->equalField(Literal::nameField())
+                      ->unique();
+        
+        $rules = array(Literal::nameField() => $nameRules,
+                       Literal::newnameField() => $newnameRules);
+        
         return $rules;
     }
     
@@ -38,5 +34,5 @@ class RenameFile extends FormRequest
         return [
             Literal::newnameField() => "new name"
         ];
-    }
+    }    
 }
