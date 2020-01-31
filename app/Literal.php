@@ -14,9 +14,4 @@ class Literal
     {
         return "newname";
     }
-
-    public static function nameRules(...$extendRules) : array
-    {
-        return array("required", ...$extendRules);
-    }
 }

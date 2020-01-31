@@ -4,20 +4,22 @@ namespace App\Rules;
 
 use Illuminate\Contracts\Validation\ImplicitRule;
 
-use App\Rules\IsFile;
-use App\Rules\UniqueFile;
-use App\Rules\FileExists;
+use App\Rules\Units\BasicRule;
+use App\Rules\Units\IsFile;
+use App\Rules\Units\Unique;
+use App\Rules\Units\Exists;
 
 
 class FileRule implements ImplicitRule
 {
     /**
      * Create a new rule instance.
-     *
      * @return void
      */
-    public function __construct()
-    {}
+    public function __construct($request)
+    {
+        $this->request = $request;
+    }
 
     /**
      * Determine if the validation rule passes.
@@ -30,9 +32,12 @@ class FileRule implements ImplicitRule
     {
         foreach ($this->rules as $rule) {
             
-            if (!$rule->passes($attribute, $value)) {
+            if ($rule->fails($attribute, $value, $this->request)) {
+                
                 $this->errorMessage = $rule->message();
+                $this->request->setRedirect($rule->getRedirect());
                 return false;
+                
             }
         }
         
@@ -50,26 +55,29 @@ class FileRule implements ImplicitRule
     }
 
     public function exists()
-    {
-        array_push($this->rules, new FileExists);
-        
-        return $this;
-    }
-    public function unique($request)
-    {
-        array_push($this->rules, new UniqueFile ($request));
-        
-        return $this;
+    {        
+        return $this->appendRule(new Exists);
     }
     
-    public function isFile($request)
+    public function unique()
+    {        
+        return $this->appendRule(new Unique);
+    }
+    
+    public function isFile()
     {
-        array_push($this->rules, new IsFile ($request));
-        
+        return $this->appendRule(new IsFile);
+    }
+    
+    protected function appendRule(BasicRule $rule)
+    {
+        array_push($this->rules, $rule);
         return $this;
     }
 
     protected $rules = array();
     protected $errorMessage = "";
+    protected $request;
+
     
 }
