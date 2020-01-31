@@ -5,6 +5,7 @@ namespace App\Rules;
 use Illuminate\Contracts\Validation\ImplicitRule;
 
 use App\Rules\Units\BasicRule;
+use App\Rules\Units\Required;
 use App\Rules\Units\IsFile;
 use App\Rules\Units\Unique;
 use App\Rules\Units\Exists;
@@ -53,6 +54,11 @@ class FileRule implements ImplicitRule
     {
         return $this->errorMessage;
     }
+    
+    public function required()
+    {
+        return $this->appendRule(new Required);
+    }
 
     public function exists()
     {        
@@ -77,7 +83,5 @@ class FileRule implements ImplicitRule
 
     protected $rules = array();
     protected $errorMessage = "";
-    protected $request;
-
-    
+    protected $request;    
 }
