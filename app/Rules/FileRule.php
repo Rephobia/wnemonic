@@ -6,6 +6,7 @@ use Illuminate\Contracts\Validation\ImplicitRule;
 
 use App\Rules\Units\BasicRule;
 use App\Rules\Units\Required;
+use App\Rules\Units\EqualField;
 use App\Rules\Units\IsFile;
 use App\Rules\Units\Unique;
 use App\Rules\Units\Exists;
@@ -58,6 +59,11 @@ class FileRule implements ImplicitRule
     public function required()
     {
         return $this->appendRule(new Required);
+    }
+
+    public function equalField(string $field)
+    {
+        return $this->appendRule(new EqualField($field));
     }
 
     public function exists()

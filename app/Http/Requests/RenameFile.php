@@ -16,8 +16,15 @@ class RenameFile extends BasicRequest
      */
     public function rules() : array
     {
-        $rules = array(Literal::nameField() => (new FileRule($this))->required()->exists(),
-                       Literal::newnameField() => (new FileRule($this))->required());
+        $nameRules = (new FileRule($this))->required()->exists();
+        
+        $newnameRules = (new FileRule($this))
+                      ->required()
+                      ->equalField(Literal::nameField())
+                      ->unique();
+        
+        $rules = array(Literal::nameField() => $nameRules,
+                       Literal::newnameField() => $newnameRules);
         
         return $rules;
     }
