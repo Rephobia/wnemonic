@@ -16,7 +16,7 @@ class NewFile extends BasicRequest
      */
     public function rules() : array
     {
-        return array(Literal::nameField() => (new FileRule($this))->isFile()->unique());
+        return array(Literal::nameField() => (new FileRule($this))->required()->isFile()->unique());
     }
   
 }
