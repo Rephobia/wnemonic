@@ -17,6 +17,6 @@ class CheckFile extends BasicRequest
      */
     public function rules() : array
     {
-        return array(Literal::nameField() => (new FileRule($this))->exists());
+        return array(Literal::nameField() => (new FileRule($this))->required()->exists());
     }    
 }
