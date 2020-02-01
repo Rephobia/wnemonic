@@ -14,4 +14,9 @@ class Literal
     {
         return "newname";
     }
+    
+    public static function tagField() : string
+    {
+        return "tag";
+    }
 }
