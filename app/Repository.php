@@ -8,44 +8,66 @@ use App\Literal;
 use App\Utils\FileInfo;
 
 
-class DataBase extends Model
+
+class File extends Model
 {
-    protected $table = "files";
+    public function tags()
+    {
+        return $this->belongsToMany("\App\Tags")->withTimestamps();
+    }
+    
+}
+
+class Tags extends Model
+{
+    public function files()
+    {
+        return $this->belongsToMany("\App\File");
+    }
+    protected $fillable = array("tag");
 }
 
 
 class Repository
 {
-    public static function get(string $filename) : ?File
+    public static function get(string $filename) : ?FileView
     {
         $data = self::getData($filename);
                 
-        return empty($data) ? NULL : new File ($data);
+        return empty($data) ? NULL : new FileView ($data);
     }
 
     public static function all() : array
     {
         $files = array();
         
-        foreach (DataBase::cursor() as $row) {
+        foreach (File::cursor() as $row) {
 
-            array_push($files, new File ($row));
+            array_push($files, new FileView ($row));
                 
         }
         
         return $files;
     }
 
-    public static function save($file) : void
+    public static function save($file, string $tagsString) : void
     {
         $filename = $file->getClientOriginalName();
         
-        $data = new DataBase;
+        $data = new File;
         $data->name = $filename;
         $data->save();
         
         $path = FileInfo::hashPath($filename);
         Storage::putFileAs(".", $file, $path);
+        
+        $delimiter = ",";
+        $tags = explode($delimiter, $tagsString);
+        
+        foreach ($tags as $rawTag) {
+            $tag = Tags::firstOrCreate([Literal::tagField() => $rawTag]);
+            $data->tags()->attach($tag->id);
+        }
     }
 
     public static function delete(string $filename)
@@ -70,9 +92,9 @@ class Repository
         Storage::move($oldpath, $newpath);
     }
     
-    private static function getData(string $filename) : ?DataBase
+    private static function getData(string $filename) : ?File
     {
-        $data = DataBase::where(Literal::nameField(), "=", $filename)->first();
+        $data = File::where(Literal::nameField(), "=", $filename)->first();
 
         return $data;
     }
