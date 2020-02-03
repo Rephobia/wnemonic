@@ -41,12 +41,17 @@ class FileView
     
     public function tags() : array
     {
-        $tags = $this->data->tags->toArray();
-        dump($tags);
-        // dump($this->data);
-        return $tags;
+        if (empty($this->tags)) {
+            
+            foreach ($this->data->tags as $tag) {
+                array_push($this->tags, $tag["tag"]);
+            }
+        }
+        
+        return $this->tags;
     }
 
     
     private $data;
+    private $tags = array();
 }
