@@ -9,6 +9,7 @@
 	    <a href={{ url($file->name()) }}> {{ $file->name() }}</a>
 	    @include("tags", ["tags" => $file->tags()])
 	</li>
+	<hr>
     @endforeach
     
 @endsection
