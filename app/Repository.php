@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Model;
 use App\Literal;
 use App\Utils\FileInfo;
+use App\Utils\TagMaker;
 
 
 
@@ -61,9 +62,8 @@ class Repository
         $path = FileInfo::hashPath($filename);
         Storage::putFileAs(".", $file, $path);
         
-        $delimiter = ",";
-        $tags = explode($delimiter, $tagsString);
-        
+        $tags = TagMaker::toArray($tagsString);
+
         foreach ($tags as $rawTag) {
             $tag = Tags::firstOrCreate([Literal::tagField() => $rawTag]);
             $data->tags()->attach($tag->id);
