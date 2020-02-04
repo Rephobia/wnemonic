@@ -2,8 +2,6 @@
 
 namespace App\Rules\Units;
 
-use App\Repository;
-
 class Required extends BasicRule
 {
     public function fails($attribute, $value) : bool

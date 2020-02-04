@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 
 use App\Literal;
-use App\File;
+use App\FileView;
 use App\Repository;
 
 
@@ -39,8 +39,9 @@ class FileController extends Controller
     public function add(NewFile $request)
     {
         $file = $request->file(Literal::nameField());
-        
-        Repository::save($file);
+        $tags = $request->input(Literal::tagField());
+
+        Repository::save($file, $tags);
         
         return redirect()->back();
     }
