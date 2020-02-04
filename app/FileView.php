@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Utils\FileInfo;
 
 
-class File
+class FileView
 {
     public function __construct($data)
     {
@@ -39,5 +39,19 @@ class File
         return Storage::disk("public")->mimeType(self::path());
     }
     
+    public function tags() : array
+    {
+        if (empty($this->tags)) {
+            
+            foreach ($this->data->tags as $tag) {
+                array_push($this->tags, $tag["tag"]);
+            }
+        }
+        
+        return $this->tags;
+    }
+
+    
     private $data;
+    private $tags = array();
 }
