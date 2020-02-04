@@ -2,7 +2,6 @@
 
 namespace App\Rules\Units;
 
-use App\Repository;
 
 class Exists extends BasicRule
 {

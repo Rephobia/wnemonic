@@ -2,8 +2,6 @@
 
 namespace App\Rules\Units;
 
-use App\Repository;
-
 class EqualField extends BasicRule
 {
 

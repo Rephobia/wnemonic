@@ -12,6 +12,7 @@
 */
 
 Route::get('/', "FileController@showAll");
+Route::get('/tag/{tags}', "TagController@show");
 Route::get('/{filename}', "FileController@show");
 
 
