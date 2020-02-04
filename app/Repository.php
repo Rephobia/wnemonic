@@ -38,11 +38,26 @@ class Repository
         return empty($data) ? NULL : new FileView ($data);
     }
 
-    public static function all() : array
+    public static function all(string $tagsString = "") : array
     {
-        $files = array();
+        $cursor;
         
-        foreach (File::cursor() as $row) {
+        if (empty($tagsString)) {
+            
+            $cursor = File::cursor();
+            
+        }
+        else {
+                        
+            $tags = TagMaker::toArray($tagsString);
+
+            $cursor = File::whereHas("tags", function($query) use ($tags) {
+                $query->whereIn("tag", $tags);
+            })->cursor();            
+        }
+                
+        $files = array();
+        foreach ($cursor as $row) {
 
             array_push($files, new FileView ($row));
                 
