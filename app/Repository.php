@@ -31,9 +31,9 @@ class Tags extends Model
 
 class Repository
 {
-    public static function get(string $filename) : ?FileView
+    public static function get(string $fileName) : ?FileView
     {
-        $data = self::getData($filename);
+        $data = self::getData($fileName);
                 
         return empty($data) ? NULL : new FileView ($data);
     }
@@ -68,13 +68,13 @@ class Repository
 
     public static function save($file, string $tagsString) : void
     {
-        $filename = $file->getClientOriginalName();
+        $fileName = $file->getClientOriginalName();
         
         $data = new File;
-        $data->name = $filename;
+        $data->name = $fileName;
         $data->save();
         
-        $path = FileInfo::hashPath($filename);
+        $path = FileInfo::hashPath($fileName);
         Storage::putFileAs(".", $file, $path);
         
         $tags = TagMaker::toArray($tagsString);
@@ -85,31 +85,41 @@ class Repository
         }
     }
 
-    public static function delete(string $filename)
+    public static function delete(string $fileName)
     {
-        $data = self::getData($filename);
+        $data = self::getData($fileName);
         
         $path = FileInfo::hashPath($data->name);
         Storage::delete($path);
         $data->delete();
     }
     
-    public static function rename(string $filename, string $newname)
+    public static function rename(string $fileName, string $newName, string $tagsString)
     {
-        $data = self::getData($filename);
+        $data = self::getData($fileName);
                 
-        $data->name = $newname;
+        $data->name = $newName;
         $data->save();
         
-        $oldpath = FileInfo::hashPath($filename);
-        $newpath = FileInfo::hashPath($newname);
+        $oldpath = FileInfo::hashPath($fileName);
+        $newpath = FileInfo::hashPath($newName);
 
+        $tags = TagMaker::toArray($tagsString);
         Storage::move($oldpath, $newpath);
+        
+        $tagsId = array();
+        foreach ($tags as $rawTag) {
+            $tag = Tags::firstOrCreate([Literal::tagField() => $rawTag]);
+            array_push($tagsId, $tag->id);
+        }
+        
+        $data->tags()->sync($tagsId);
+
     }
     
-    private static function getData(string $filename) : ?File
+    private static function getData(string $fileName) : ?File
     {
-        $data = File::where(Literal::nameField(), "=", $filename)->first();
+        $data = File::where(Literal::nameField(), "=", $fileName)->first();
 
         return $data;
     }
