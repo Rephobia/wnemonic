@@ -14,8 +14,6 @@
 	    </div>
 	@endif
 	
-	@include("loader")
-
 	<div id="content">
 	    @yield('content')
 	</div>
