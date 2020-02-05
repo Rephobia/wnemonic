@@ -12,9 +12,9 @@ use App\Http\Requests\RenameFile;
 
 class EditController extends Controller
 {
-    public function getEditForm(string $filename)
+    public function getEditForm(string $fileName)
     {
-        $file = Repository::get($filename);
+        $file = Repository::get($fileName);
         
         if ($file === NULL) {
             abort(404);
@@ -25,18 +25,19 @@ class EditController extends Controller
     
     public function edit(RenameFile $request)
     {
-        $filename = $request->input(Literal::nameField());
-        $newname = $request->input(Literal::newnameField());
-        
-        Repository::rename($filename, $newname);
-        
-        return redirect("/".$newname);
+        $fileName = $request->input(Literal::nameField());
+        $newName = $request->input(Literal::newnameField());
+        $tagsString = $request->input(Literal::tagField());
+
+        Repository::rename($fileName, $newName, $tagsString);
+
+        return redirect("/".$newName);
     }
 
     public function cancel(CheckFile $request)
     {
-        $filename = $request->input(Literal::nameField());
-        return redirect("/".$filename);
+        $fileName = $request->input(Literal::nameField());
+        return redirect("/".$fileName);
     }
 
 }
