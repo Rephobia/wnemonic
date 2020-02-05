@@ -15,7 +15,6 @@ use App\Repository;
 
 use App\Http\Requests\CheckFile;
 use App\Http\Requests\NewFile;
-use App\Http\Requests\RenameFile;
 
 class FileController extends Controller
 {
@@ -54,15 +53,4 @@ class FileController extends Controller
         return redirect("/");
     }
     
-    public function rename(RenameFile $request)
-    {
-        $filename = $request->input(Literal::nameField());
-        $newname = $request->input(Literal::newnameField());
-        
-        if ($filename !== $newname) {
-            Repository::rename($filename, $newname);
-        }
-        
-        return redirect("/".$newname);
-    }
 }
