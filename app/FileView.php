@@ -50,6 +50,10 @@ class FileView
         
         return $this->tags;
     }
+    public function tagsString() : string
+    {
+        return implode(",", self::tags());
+    }
 
     
     private $data;
