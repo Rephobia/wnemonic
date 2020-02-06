@@ -18,9 +18,14 @@ use App\Http\Requests\NewFile;
 
 class FileController extends Controller
 {
+    public function __construct(Repository $repository)
+    {
+        $this->repository = $repository;
+    }
+    
     public function show(string $filename)
     {
-        $file = Repository::get($filename);
+        $file = $this->repository->get($filename);
         
         if ($file === NULL) {
             abort(404);
@@ -31,7 +36,7 @@ class FileController extends Controller
 
     public function showAll()
     {
-        $files = Repository::all();
+        $files = $this->repository->all();
         return view("main")->with("files", $files);
     }
  
@@ -40,7 +45,7 @@ class FileController extends Controller
         $file = $request->file(Literal::nameField());
         $tags = $request->input(Literal::tagField());
 
-        Repository::save($file, $tags);
+        $this->repository->save($file, $tags);
         
         return redirect()->back();
     }
@@ -48,9 +53,10 @@ class FileController extends Controller
     public function delete(CheckFile $request)
     {
         $filename = $request->input(Literal::nameField());
-        Repository::delete($filename);
+        $this->repository->delete($filename);
         
         return redirect("/");
     }
     
+    private $repository;
 }

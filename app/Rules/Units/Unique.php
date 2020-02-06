@@ -11,7 +11,7 @@ class Unique extends BasicRule
         $isFile = $request->hasFile($attribute);
         $this->value = $isFile ? $value->getClientOriginalName() : $value;
         
-        return Repository::get($this->value) !== NULL;
+        return \App::make(Repository::class)->get($this->value) !== NULL;
     }
 
     /**

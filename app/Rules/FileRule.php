@@ -89,5 +89,4 @@ class FileRule implements ImplicitRule
 
     protected $rules = array();
     protected $errorMessage = "";
-    protected $request;    
 }

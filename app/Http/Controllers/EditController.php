@@ -11,10 +11,15 @@ use App\Http\Requests\RenameFile;
 
 
 class EditController extends Controller
-{
+{    
+    public function __construct(Repository $repository)
+    {
+        $this->repository = $repository;
+    }
+    
     public function getEditForm(string $fileName)
     {
-        $file = Repository::get($fileName);
+        $file = $this->repository->get($fileName);
         
         if ($file === NULL) {
             abort(404);
@@ -28,9 +33,15 @@ class EditController extends Controller
         $fileName = $request->input(Literal::nameField());
         $newName = $request->input(Literal::newnameField());
         $tagsString = $request->input(Literal::tagField());
+        
+        $file = $this->repository->get($fileName);
 
-        Repository::rename($fileName, $newName, $tagsString);
+        if ($fileName !== $newName) {
+            $file = $this->repository->rename($file, $newName);
+        }
 
+        $this->repository->updateTags($file, $tagsString);
+        
         return redirect("/".$newName);
     }
 
@@ -40,4 +51,5 @@ class EditController extends Controller
         return redirect("/".$fileName);
     }
 
+    private $repository;
 }
