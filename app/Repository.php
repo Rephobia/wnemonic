@@ -31,14 +31,14 @@ class Tags extends Model
 
 class Repository
 {
-    public static function get(string $fileName) : ?FileView
+    public function get(string $fileName) : ?FileView
     {
         $data = self::getData($fileName);
                 
         return empty($data) ? NULL : new FileView ($data);
     }
 
-    public static function all(string $tagsString = "") : array
+    public function all(string $tagsString = "") : array
     {
         $cursor;
         
@@ -66,7 +66,7 @@ class Repository
         return $files;
     }
 
-    public static function save($file, string $tagsString) : void
+    public function save($file, string $tagsString) : void
     {
         $fileName = $file->getClientOriginalName();
         
@@ -85,7 +85,7 @@ class Repository
         }
     }
 
-    public static function delete(string $fileName)
+    public function delete(string $fileName)
     {
         $data = self::getData($fileName);
         
@@ -94,19 +94,25 @@ class Repository
         $data->delete();
     }
     
-    public static function rename(string $fileName, string $newName, string $tagsString)
+    public function rename(FileView $file, string $newName) : FileView
     {
-        $data = self::getData($fileName);
+        $data = $fileView->data;
                 
         $data->name = $newName;
         $data->save();
         
         $oldpath = FileInfo::hashPath($fileName);
         $newpath = FileInfo::hashPath($newName);
-
-        $tags = TagMaker::toArray($tagsString);
         Storage::move($oldpath, $newpath);
-        
+
+        return new FileView ($data);
+    }
+
+    public function updateTags(FileView &$fileView, string $tagsString)
+    {
+        $data = $fileView->data;
+                        
+        $tags = TagMaker::toArray($tagsString);
         $tagsId = array();
         foreach ($tags as $rawTag) {
             $tag = Tags::firstOrCreate([Literal::tagField() => $rawTag]);
@@ -114,10 +120,11 @@ class Repository
         }
         
         $data->tags()->sync($tagsId);
-
     }
+
     
-    private static function getData(string $fileName) : ?File
+    
+    private function getData(string $fileName) : ?File
     {
         $data = File::where(Literal::nameField(), "=", $fileName)->first();
 
