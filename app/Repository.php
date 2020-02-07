@@ -66,7 +66,7 @@ class Repository
         return $files;
     }
 
-    public function save($file, string $tagsString) : void
+    public function save($file, string $tagsString) : FileView
     {
         $fileName = $file->getClientOriginalName();
         
@@ -83,6 +83,8 @@ class Repository
             $tag = Tags::firstOrCreate([Literal::tagField() => $rawTag]);
             $data->tags()->attach($tag->id);
         }
+
+        return new FileView ($data);
     }
 
     public function delete(string $fileName)

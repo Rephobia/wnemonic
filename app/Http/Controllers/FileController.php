@@ -13,9 +13,6 @@ use App\FileView;
 use App\Repository;
 
 
-use App\Http\Requests\CheckFile;
-use App\Http\Requests\NewFile;
-
 class FileController extends Controller
 {
     public function __construct(Repository $repository)
@@ -39,16 +36,6 @@ class FileController extends Controller
         $files = $this->repository->all();
         return view("main")->with("files", $files);
     }
- 
-    public function add(NewFile $request)
-    {
-        $file = $request->file(Literal::nameField());
-        $tags = $request->input(Literal::tagField());
-
-        $this->repository->save($file, $tags);
-        
-        return redirect()->back();
-    }
-        
+         
     private $repository;
 }
