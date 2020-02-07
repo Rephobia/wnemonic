@@ -6,12 +6,20 @@ use App\Repository;
 
 class Unique extends BasicRule
 {
+    public function __construct(string $ignoreField)
+    {
+        $this->ignoreField = $ignoreField;
+    }
+    
     public function fails($attribute, $value, $request)
     {
         $isFile = $request->hasFile($attribute);
         $this->value = $isFile ? $value->getClientOriginalName() : $value;
+
+        $notEqualIgnore = $this->value !== $request->input($this->ignoreField);
+        $inRepository = \App::make(Repository::class)->get($this->value) !== NULL;
         
-        return \App::make(Repository::class)->get($this->value) !== NULL;
+        return $notEqualIgnore && $inRepository;
     }
 
     /**
@@ -26,4 +34,5 @@ class Unique extends BasicRule
     }
     
     private $value;
+    private $ignoreField;
 }

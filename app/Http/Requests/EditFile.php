@@ -18,13 +18,13 @@ class EditFile extends BasicRequest
     {
         $nameRules = (new FileRule($this))->required()->exists();
         
-        $newnameRules = (new FileRule($this))->required();
+        $newnameRules = (new FileRule($this))->required()->unique(Literal::nameField());
         
-        $tagsRules = (new FileRule($this))->required();
+        $tagRules = (new FileRule($this))->required();
         
         $rules = array(Literal::nameField() => $nameRules,
                        Literal::newnameField() => $newnameRules,
-                       Literal::tagField() => $tagsRules);
+                       Literal::tagField() => $tagRules);
         
         return $rules;
     }
