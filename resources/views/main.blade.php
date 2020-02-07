@@ -3,8 +3,7 @@
 @section("title", "wnemonic")
 
 @section("content")
-    @include("loader")
-    
+
     @foreach($files as $file)
 	<li>
 	    <a href={{ url($file->name()) }}> {{ $file->name() }}</a>
