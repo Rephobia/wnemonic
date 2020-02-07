@@ -49,14 +49,6 @@ class FileController extends Controller
         
         return redirect()->back();
     }
-    
-    public function delete(CheckFile $request)
-    {
-        $filename = $request->input(Literal::nameField());
-        $this->repository->delete($filename);
         
-        return redirect("/");
-    }
-    
     private $repository;
 }
