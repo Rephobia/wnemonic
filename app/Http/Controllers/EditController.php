@@ -40,7 +40,15 @@ class EditController extends Controller
         
         return redirect("/".$newName);
     }
-
+    
+    public function delete(CheckFile $request)
+    {
+        $fileName = $request->input(Literal::nameField());
+        $this->repository->delete($fileName);
+        
+        return redirect("/");
+    }
+    
     public function cancel(CheckFile $request)
     {
         $fileName = $request->input(Literal::nameField());

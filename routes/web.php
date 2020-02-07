@@ -16,10 +16,8 @@ Route::get('/tag/{tags}', "TagController@show");
 Route::get('/edit/{filename}', "EditController@getEditForm");
 Route::get('/{filename}', "FileController@show");
 
-
 Route::post("/add", "FileController@add");
-Route::post("/delete", "FileController@delete");
-Route::post("/rename", "FileController@rename");
 
 Route::post("/edit", "EditController@edit");
+Route::post("/delete", "EditController@delete");
 Route::post("/cancel", "EditController@cancel");
