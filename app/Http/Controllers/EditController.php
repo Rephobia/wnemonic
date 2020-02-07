@@ -8,6 +8,7 @@ use App\Repository;
 use App\Literal;
 use App\Http\Requests\CheckFile;
 use App\Http\Requests\EditFile;
+use App\Http\Requests\NewFile;
 
 
 class EditController extends Controller
@@ -24,8 +25,16 @@ class EditController extends Controller
         if ($file === NULL) {
             abort(404);
         }
+        session(["cancel_link" => "/".$fileName]);
         
-        return view("edit")->with("file", $file);
+        return view("editor/edit")->with("file", $file);
+    }
+
+    public function getAddForm()
+    {
+        session(["cancel_link" => url()->previous()]);
+        
+        return view("editor/add");
     }
     
     public function edit(EditFile $request)
@@ -41,6 +50,16 @@ class EditController extends Controller
         return redirect("/".$newName);
     }
     
+    public function add(NewFile $request)
+    {
+        $file = $request->file(Literal::nameField());
+        $tags = $request->input(Literal::tagField());
+
+        $fileView = $this->repository->save($file, $tags);
+        
+        return redirect("/".$fileView->name());
+    }
+    
     public function delete(CheckFile $request)
     {
         $fileName = $request->input(Literal::nameField());
@@ -49,10 +68,9 @@ class EditController extends Controller
         return redirect("/");
     }
     
-    public function cancel(CheckFile $request)
+    public function cancel()
     {
-        $fileName = $request->input(Literal::nameField());
-        return redirect("/".$fileName);
+        return redirect(session("cancel_link"));
     }
 
     private $repository;

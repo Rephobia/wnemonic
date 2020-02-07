@@ -61,7 +61,7 @@ class FileView
         $trace = debug_backtrace();
         $incomer = $trace[1]['class'];
         
-        if(isset($incomer) && in_array($incomer, $this->friends)) {
+        if (isset($incomer) && in_array($incomer, $this->friends)) {
             return $this->data;
         }
 

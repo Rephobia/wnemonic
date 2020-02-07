@@ -13,6 +13,10 @@
 		@endforeach
 	    </div>
 	@endif
+
+	<div id="header" style="text-align:center">
+	    @include('header')
+	</div>
 	
 	<div id="content">
 	    @yield('content')
