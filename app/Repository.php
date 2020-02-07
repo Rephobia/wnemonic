@@ -94,10 +94,16 @@ class Repository
         $data->delete();
     }
     
-    public function rename(FileView $file, string $newName) : FileView
+    public function rename(FileView $fileView, string $newName) : void
     {
         $data = $fileView->data;
-                
+        
+        $fileName = $data->name;
+        
+        if ($fileName === $newName) {
+            return;
+        }
+        
         $data->name = $newName;
         $data->save();
         
@@ -105,14 +111,13 @@ class Repository
         $newpath = FileInfo::hashPath($newName);
         Storage::move($oldpath, $newpath);
 
-        return new FileView ($data);
     }
 
-    public function updateTags(FileView &$fileView, string $tagsString)
+    public function updateTags(FileView $fileView, string $tagsString) : void
     {
         $data = $fileView->data;
-                        
         $tags = TagMaker::toArray($tagsString);
+        
         $tagsId = array();
         foreach ($tags as $rawTag) {
             $tag = Tags::firstOrCreate([Literal::tagField() => $rawTag]);

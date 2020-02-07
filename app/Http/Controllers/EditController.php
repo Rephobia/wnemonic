@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Repository;
 use App\Literal;
 use App\Http\Requests\CheckFile;
-use App\Http\Requests\RenameFile;
+use App\Http\Requests\EditFile;
 
 
 class EditController extends Controller
@@ -28,18 +28,14 @@ class EditController extends Controller
         return view("edit")->with("file", $file);
     }
     
-    public function edit(RenameFile $request)
+    public function edit(EditFile $request)
     {
         $fileName = $request->input(Literal::nameField());
         $newName = $request->input(Literal::newnameField());
         $tagsString = $request->input(Literal::tagField());
         
         $file = $this->repository->get($fileName);
-
-        if ($fileName !== $newName) {
-            $file = $this->repository->rename($file, $newName);
-        }
-
+        $this->repository->rename($file, $newName);
         $this->repository->updateTags($file, $tagsString);
         
         return redirect("/".$newName);
