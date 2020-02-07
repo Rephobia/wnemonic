@@ -71,9 +71,9 @@ class FileRule implements ImplicitRule
         return $this->appendRule(new Exists);
     }
     
-    public function unique()
+    public function unique(string $ignoreField = "")
     {        
-        return $this->appendRule(new Unique);
+        return $this->appendRule(new Unique ($ignoreField));
     }
     
     public function isFile()
