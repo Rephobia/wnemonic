@@ -50,8 +50,27 @@ class FileView
         
         return $this->tags;
     }
+    
+    public function tagsString() : string
+    {
+        return implode(",", self::tags());
+    }
+    
+    public function __get($field)
+    {
+        $trace = debug_backtrace();
+        $incomer = $trace[1]['class'];
+        
+        if (isset($incomer) && in_array($incomer, $this->friends)) {
+            return $this->data;
+        }
 
+        trigger_error("{$incomer} cannot access to private field ".__CLASS__."::".$field,
+                      E_USER_ERROR);
+    }
     
     private $data;
     private $tags = array();
+    
+    private $friends = array("App\Repository");
 }

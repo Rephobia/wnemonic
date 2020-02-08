@@ -3,6 +3,7 @@
 @section("title", $file->name())
 
     @section("content")
+	
 	<p> {{ $file->name() }} </p>
 	
 	@php

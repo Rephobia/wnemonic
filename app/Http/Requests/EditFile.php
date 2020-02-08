@@ -6,7 +6,7 @@ use App\Literal;
 use App\Rules\FileRule;
 use App\Http\Requests\BasicRequest;
 
-class RenameFile extends BasicRequest
+class EditFile extends BasicRequest
 {
 
     /**
@@ -18,13 +18,13 @@ class RenameFile extends BasicRequest
     {
         $nameRules = (new FileRule($this))->required()->exists();
         
-        $newnameRules = (new FileRule($this))
-                      ->required()
-                      ->equalField(Literal::nameField())
-                      ->unique();
+        $newnameRules = (new FileRule($this))->required()->unique(Literal::nameField());
+        
+        $tagRules = (new FileRule($this))->required();
         
         $rules = array(Literal::nameField() => $nameRules,
-                       Literal::newnameField() => $newnameRules);
+                       Literal::newnameField() => $newnameRules,
+                       Literal::tagField() => $tagRules);
         
         return $rules;
     }

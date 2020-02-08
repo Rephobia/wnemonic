@@ -2,6 +2,7 @@
 
 namespace App\Rules\Units;
 
+use App\Repository;
 
 class Exists extends BasicRule
 {
@@ -14,7 +15,7 @@ class Exists extends BasicRule
     public function fails($attribute, $value)
     {
         $this->value = $value;
-        return Repository::get($value) === NULL;
+        return \App::make(Repository::class)->get($value) === NULL;
     }
 
     /**

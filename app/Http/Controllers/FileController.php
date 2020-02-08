@@ -13,15 +13,16 @@ use App\FileView;
 use App\Repository;
 
 
-use App\Http\Requests\CheckFile;
-use App\Http\Requests\NewFile;
-use App\Http\Requests\RenameFile;
-
 class FileController extends Controller
 {
+    public function __construct(Repository $repository)
+    {
+        $this->repository = $repository;
+    }
+    
     public function show(string $filename)
     {
-        $file = Repository::get($filename);
+        $file = $this->repository->get($filename);
         
         if ($file === NULL) {
             abort(404);
@@ -32,37 +33,9 @@ class FileController extends Controller
 
     public function showAll()
     {
-        $files = Repository::all();
+        $files = $this->repository->all();
         return view("main")->with("files", $files);
     }
- 
-    public function add(NewFile $request)
-    {
-        $file = $request->file(Literal::nameField());
-        $tags = $request->input(Literal::tagField());
-
-        Repository::save($file, $tags);
-        
-        return redirect()->back();
-    }
-    
-    public function delete(CheckFile $request)
-    {
-        $filename = $request->input(Literal::nameField());
-        Repository::delete($filename);
-        
-        return redirect("/");
-    }
-    
-    public function rename(RenameFile $request)
-    {
-        $filename = $request->input(Literal::nameField());
-        $newname = $request->input(Literal::newnameField());
-        
-        if ($filename !== $newname) {
-            Repository::rename($filename, $newname);
-        }
-        
-        return redirect("/".$newname);
-    }
+         
+    private $repository;
 }

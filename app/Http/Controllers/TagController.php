@@ -7,14 +7,16 @@ use App\Repository;
 
 class TagController extends Controller
 {
-
+    public function __construct(Repository $repository)
+    {
+        $this->repository = $repository;
+    }
     public function show(string $tags)
     {
-        $files = Repository::all($tags);
-        
-        // $files = Repository::allByTag($tags);
-        
+        $files = $this->repository->all($tags);
+                
         return view("main")->with("files", $files);
     }
-        
+    private $repository;
+
 }
