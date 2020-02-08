@@ -3,6 +3,7 @@
     <head>
 	<meta charset="UTF-8">
 	<title>@yield("title", "wnemonic")</title>
+	<link rel="stylesheet" type="text/css" href={{ url("css/style.css") }}>
     </head>
     <body>
 	
