@@ -13,7 +13,23 @@ body {
 }
 header {
   font-family: "Open Sans";
+  font-weight: bold;
   font-size: 20px;
   word-spacing: 15px;
   text-align: center;
+}
+header a {
+  text-decoration: none;
+  color: #454545;
+}
+a {
+  text-decoration: none;
+}
+a.file {
+  color: #07A;
+}
+a.tag {
+  color: #505050;
+  font-style: italic;
+  font-size: 14px;
 }
