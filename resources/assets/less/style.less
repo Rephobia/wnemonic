@@ -1,8 +1,13 @@
-// Font
 @font: "Open Sans";
 
 @color-body: #fefefe;
 @color-body-text: #454545;
+
+@color-header-link: @color-body-text;
+@color-file-link: #07A;
+@color-tag-link: #505050;
+
+
 
 html
 {
@@ -24,7 +29,35 @@ body
 header
 {
     font-family: @font;
+    font-weight: bold;
     font-size: 20px;
     word-spacing: 15px;
     text-align: center;
+    
+    a
+    {
+	text-decoration: none;
+
+	color: @color-header-link;
+    }
+
 }
+
+a
+{
+    text-decoration: none;
+    
+    &.file
+    {
+	color: @color-file-link;
+    }
+    
+    &.tag
+    {
+	color: @color-tag-link;
+	font-style: italic;
+	font-size: 14px;
+    }
+}
+
+   
