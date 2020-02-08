@@ -11,11 +11,14 @@
 |
 */
 
+Route::get('/edit/{filename}', "EditController@getEditForm");
+Route::get("/add", "EditController@getAddForm");
+
 Route::get('/', "FileController@showAll");
 Route::get('/tag/{tags}', "TagController@show");
 Route::get('/{filename}', "FileController@show");
 
-
-Route::post("/add", "FileController@add");
-Route::post("/delete", "FileController@delete");
-Route::post("/rename", "FileController@rename");
+Route::post("/add", "EditController@add");
+Route::post("/edit", "EditController@edit");
+Route::post("/delete", "EditController@delete");
+Route::post("/cancel", "EditController@cancel");
