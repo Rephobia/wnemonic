@@ -11,3 +11,9 @@ body {
   line-height: 1.4;
   text-align: justify;
 }
+header {
+  font-family: "Open Sans";
+  font-size: 20px;
+  word-spacing: 15px;
+  text-align: center;
+}
