@@ -17,6 +17,7 @@ header {
   font-size: 20px;
   word-spacing: 15px;
   text-align: center;
+  margin-bottom: 20px;
 }
 header a {
   color: #454545;
@@ -30,20 +31,20 @@ a {
   -webkit-box-pack: justify;
           justify-content: space-between;
 }
-li.main {
-  margin: 15px 0;
+.tag,
+.time {
+  color: #505050;
+  font-style: italic;
+  font-size: 12px;
+}
+li.file-item {
+  margin-bottom: 15px;
   list-style-type: none;
 }
-li.main .name {
+li.file-item a.name {
   color: #07A;
 }
-li.main .time {
-  color: #505050;
-  font-style: italic;
-  font-size: 12px;
-}
-li.main .tag {
-  color: #505050;
-  font-style: italic;
-  font-size: 12px;
+div.file-item div.name,
+div.file-item div.time {
+  text-align: center;
 }
