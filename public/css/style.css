@@ -23,6 +23,7 @@ header a {
   color: #454545;
 }
 a {
+  color: #07A;
   text-decoration: none;
 }
 .oneline {
@@ -41,10 +42,13 @@ li.file-item {
   margin-bottom: 15px;
   list-style-type: none;
 }
-li.file-item a.name {
-  color: #07A;
-}
-div.file-item div.name,
-div.file-item div.time {
+div.file-item {
   text-align: center;
+}
+div.file-item div.render {
+  margin: 25px 0;
+}
+div.file-item div.control {
+  word-spacing: 10px;
+  margin: 10px 0;
 }
