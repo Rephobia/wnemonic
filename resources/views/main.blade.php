@@ -6,7 +6,7 @@
 
     @foreach($files as $file)
 	
-	<li class="main">
+	<li class="file-item">
 	    
 	    <div class="oneline">
 		<a class="name" href={{ url($file->name()) }}> {{ $file->name() }} </a>
