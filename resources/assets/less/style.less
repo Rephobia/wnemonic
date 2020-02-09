@@ -43,6 +43,8 @@ header
 
 a
 {
+    color: @color-file-link;
+
     text-decoration: none;
 }
 
@@ -65,18 +67,20 @@ li.file-item
 {
     margin-bottom: 15px;
     list-style-type: none;
-    
-    a.name
-    {
-	color: @color-file-link;
-    }
 }
 
 div.file-item
 {
-    div.name,
-    div.time
+    text-align: center;
+    
+    div.render
     {
-	text-align: center;
+	margin: 25px 0;
+    }
+    
+    div.control
+    {
+	word-spacing: 10px;
+	margin: 10px 0;
     }
 }
