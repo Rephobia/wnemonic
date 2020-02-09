@@ -19,20 +19,31 @@ header {
   text-align: center;
 }
 header a {
-  text-decoration: none;
   color: #454545;
 }
 a {
   text-decoration: none;
 }
-a.file {
+.oneline {
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-pack: justify;
+          justify-content: space-between;
+}
+li.main {
+  margin: 15px 0;
+  list-style-type: none;
+}
+li.main .name {
   color: #07A;
 }
-a.tag {
+li.main .time {
   color: #505050;
   font-style: italic;
-  font-size: 14px;
+  font-size: 12px;
 }
-li {
-  list-style-type: none;
+li.main .tag {
+  color: #505050;
+  font-style: italic;
+  font-size: 12px;
 }

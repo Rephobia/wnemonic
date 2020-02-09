@@ -18,6 +18,11 @@ class FileView
     {
         return $this->data->name;
     }
+    public function updated()
+    {
+        return $this->data->updated_at;
+    }
+
 
     public function path() : string
     {
