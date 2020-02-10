@@ -1,2 +1,2 @@
-<a href={{ url("/") }}><button>Wnemonic</button></a>
-<a href={{ url("add") }}><button>Add</button></a>
+<a href={{ url("/") }}>Wnemonic</a>
+<a href={{ url("add") }}>Add</a>
