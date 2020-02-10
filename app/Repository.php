@@ -39,14 +39,14 @@ class Repository
         return empty($data) ? NULL : new FileView ($data);
     }
 
-    public function all(string $tagsString = "") : FileViewIterator
+    public function all($page, string $tagsString = "") : FileViewIterator
     {
         $paginator;
         $pageCap = 13;
         
         if (empty($tagsString)) {
             
-            $paginator = File::paginate($pageCap);
+            $paginator = File::paginate($pageCap, array("*"), "page", $page);
             
         }
         else {
@@ -55,7 +55,7 @@ class Repository
 
             $paginator = File::whereHas("tags", function($query) use ($tags) {
                 $query->whereIn("tag", $tags);
-            })->paginate($pageCap);
+            })->paginate($pageCap, array("*"), "page", $page);
             
         }
 
