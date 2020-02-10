@@ -19,5 +19,6 @@
 	
     @endforeach
     
-    {{$files->renderPages()}}
+    {!! $files->pages() !!}
+    
 @endsection
