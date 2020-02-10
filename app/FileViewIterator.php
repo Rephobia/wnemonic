@@ -8,10 +8,11 @@ class FileViewIterator implements \Iterator
     {
         $this->paginator = $paginator;
         $this->position = 0;
+        $this->return  = $this->createLinks();
     }
-    public function renderPages()
+    public function pages() : string
     {
-        return $this->paginator->links();
+        return $this->return ;
     }
     
     public function rewind()
@@ -37,7 +38,23 @@ class FileViewIterator implements \Iterator
     {
         return isset($this->paginator[$this->position]);
     }
+
+    private function createLinks() : string
+    {
+        $links = $this->paginator->links();
+        
+        $paramPattern = "#\?page=#";
+        $paramReplace = "/page/";
+        $transition = preg_replace($paramPattern, $paramReplace, $links);
+
+        $argumPattern = "#page/([1-9]+[0-9]*)/page/([1-9]+[0-9]*)#";
+        $argumReplace = "page/$2";
+        
+        return preg_replace($argumPattern, $argumReplace, $transition);
+                
+    }
     
     private $paginator;
-    private $position = 0;
+    private int $position = 0;
+    private string $links;
 }

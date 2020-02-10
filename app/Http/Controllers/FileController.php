@@ -31,9 +31,9 @@ class FileController extends Controller
         return view("file")->with("file", $file);
     }
 
-    public function showAll()
+    public function showAll(int $page = 1)
     {
-        $files = $this->repository->all();
+        $files = $this->repository->all($page);
         return view("main")->with("files", $files);
     }
          
