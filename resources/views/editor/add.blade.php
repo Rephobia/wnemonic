@@ -2,11 +2,26 @@
 
 @section("content")
 
-    <form action="/add" method="post" enctype="multipart/form-data">
-	@csrf
-	<input type="file" name={{ \App\Literal::nameField() }}>
-	<br>
-	@include("editor/control")
-    </form>
+    <div class="editor">
+	
+	<form  method="post" enctype="multipart/form-data">
+	    @csrf
+	    <div class="upload">
+		<input type="file" name={{ \App\Literal::nameField() }}>
+	    </div>
+
+	    <div class="named-input">
+		<label>Tags:</label>
+		<input type="text" name={{ \App\Literal::tagField() }}>
+	    </div>
+	    
+	    <div class="control">
+		<button type="reset">Reset</button>
+		<button type="submit" formaction="/add">Save</button>
+		<button type="submit" formaction="/cancel">Cancel</button>
+	    </div>
+	    
+	</form>
+    </div>
     
 @endsection
