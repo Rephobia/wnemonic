@@ -29,6 +29,7 @@ class Tags extends Model
 }
 
 
+
 class Repository
 {
     public function get(string $fileName) : ?FileView
@@ -38,32 +39,28 @@ class Repository
         return empty($data) ? NULL : new FileView ($data);
     }
 
-    public function all(string $tagsString = "") : array
+    public function all(string $tagsString = "") : FileViewIterator
     {
-        $cursor;
+        $paginator;
+        $pageCap = 13;
         
         if (empty($tagsString)) {
             
-            $cursor = File::cursor();
+            $paginator = File::paginate($pageCap);
             
         }
         else {
                         
             $tags = TagMaker::toArray($tagsString);
 
-            $cursor = File::whereHas("tags", function($query) use ($tags) {
+            $paginator = File::whereHas("tags", function($query) use ($tags) {
                 $query->whereIn("tag", $tags);
-            })->cursor();            
+            })->paginate($pageCap);
+            
         }
-                
-        $files = array();
-        foreach ($cursor as $row) {
 
-            array_push($files, new FileView ($row));
-                
-        }
-        
-        return $files;
+        return new FileViewIterator ($paginator);
+
     }
 
     public function save($file, string $tagsString) : FileView

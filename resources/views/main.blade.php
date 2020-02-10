@@ -19,4 +19,5 @@
 	
     @endforeach
     
+    {{$files->renderPages()}}
 @endsection
