@@ -48,7 +48,23 @@ div.file-item {
 div.file-item div.render {
   margin: 25px 0;
 }
-div.file-item div.control {
+div.editor {
+  text-align: center;
+  display: block;
+}
+div.control {
   word-spacing: 10px;
   margin: 10px 0;
+}
+div.control button {
+  background: none!important;
+  border: none;
+  padding: 0!important;
+  font-family: "Open Sans";
+  font-size: 16px;
+  color: #07A;
+  cursor: pointer;
+}
+button.delete {
+  color: red !important;
 }

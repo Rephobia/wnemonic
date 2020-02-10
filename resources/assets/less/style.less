@@ -4,8 +4,10 @@
 @color-body-text: #454545;
 
 @color-header-link: @color-body-text;
-@color-file-link: #07A;
+@color-link: #07A;
 @color-tag-link: #505050;
+
+@color-delete: red;
 
 
 html
@@ -43,7 +45,7 @@ header
 
 a
 {
-    color: @color-file-link;
+    color: @color-link;
 
     text-decoration: none;
 }
@@ -77,10 +79,33 @@ div.file-item
     {
 	margin: 25px 0;
     }
+}
+
+
+div.editor
+{
+    text-align: center;
+    display: block;
+}
+
+div.control
+{
+    word-spacing: 10px;
+    margin: 10px 0;
     
-    div.control
+    button
     {
-	word-spacing: 10px;
-	margin: 10px 0;
+	background: none!important;
+	border: none;
+	padding: 0!important;
+	font-family: @font;
+	font-size: 16px;
+	color: @color-link;
+	cursor: pointer;
     }
+}
+
+button.delete
+{
+    color: @color-delete !important;
 }
