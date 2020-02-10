@@ -26,6 +26,9 @@ a {
   color: #07A;
   text-decoration: none;
 }
+div.upload {
+  margin-bottom: 15px;
+}
 .oneline {
   display: -webkit-box;
   display: flex;
@@ -40,12 +43,16 @@ a {
 }
 li.file-item {
   list-style-type: none;
+  margin-bottom: 15px;
 }
 div.file-item {
   text-align: center;
 }
 div.file-item div.render {
   margin-top: 25px;
+}
+div.file-item div.tags {
+  margin-bottom: 15px;
 }
 div.editor {
   text-align: center;
@@ -63,17 +70,19 @@ div.control button {
   color: #07A;
   cursor: pointer;
 }
+div.named-input {
+  margin-bottom: 15px;
+}
 div.named-input label {
   display: inline-block;
   min-width: 40px;
   text-align: left;
 }
-li.file-item,
-div.upload,
-div.named-input,
-div.file-item .tags {
-  margin-bottom: 15px;
-}
 button.delete {
   color: red !important;
+}
+div#error {
+  margin-bottom: 15px;
+  color: red;
+  text-align: center;
 }

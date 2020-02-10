@@ -7,8 +7,9 @@
 @color-link: #07A;
 @color-tag-link: #505050;
 
-@color-delete: red;
+@color-care: red;
 
+@common-margin: 15px;
 
 html
 {
@@ -50,6 +51,11 @@ a
     text-decoration: none;
 }
 
+div.upload
+{
+    margin-bottom: 15px;
+}
+
 .oneline
 {
     display: flex;
@@ -68,6 +74,7 @@ a
 li.file-item
 {
     list-style-type: none;
+    margin-bottom: 15px;
 }
 
 div.file-item
@@ -78,8 +85,12 @@ div.file-item
     {
 	margin-top: 25px;
     }
+    
+    div.tags
+    {
+	margin-bottom: 15px;
+    }
 }
-
 
 div.editor
 {
@@ -105,6 +116,8 @@ div.control
 
 div.named-input
 {
+    margin-bottom: 15px;
+
     label
     {
 	display: inline-block;
@@ -113,15 +126,14 @@ div.named-input
     }
 }
 
-li.file-item,
-div.upload,
-div.named-input,
-div.file-item .tags
-{
-    margin-bottom: 15px;
-}
-
 button.delete
 {
-    color: @color-delete !important;
+    color: @color-care !important;
+}
+
+div#error
+{
+    margin-bottom: @common-margin;
+    color: @color-care;
+    text-align: center;
 }
