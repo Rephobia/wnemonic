@@ -19,4 +19,6 @@
 	
     @endforeach
     
+    {!! $files->pages() !!}
+    
 @endsection

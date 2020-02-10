@@ -11,9 +11,9 @@ class TagController extends Controller
     {
         $this->repository = $repository;
     }
-    public function show(string $tags)
+    public function show(string $tags, int $page = 1)
     {
-        $files = $this->repository->all($tags);
+        $files = $this->repository->all($page, $tags);
                 
         return view("main")->with("files", $files);
     }

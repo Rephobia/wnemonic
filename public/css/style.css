@@ -86,3 +86,19 @@ div#error {
   color: red;
   text-align: center;
 }
+ul.pagination {
+  text-align: center;
+}
+ul.pagination li {
+  display: inline;
+}
+ul.pagination .disabled {
+  color: #454545 !important;
+}
+ul.pagination .active {
+  font-weight: bold !important;
+  color: #454545 !important;
+}
+ul.pagination .page-item {
+  color: #07A;
+}
