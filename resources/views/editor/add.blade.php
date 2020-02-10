@@ -6,8 +6,14 @@
 	
 	<form  method="post" enctype="multipart/form-data">
 	    @csrf
-	    <input class="control" type="file" name={{ \App\Literal::nameField() }}>
-	    <input type="text" name={{ \App\Literal::tagField() }}>
+	    <div class="upload">
+		<input type="file" name={{ \App\Literal::nameField() }}>
+	    </div>
+
+	    <div class="named-input">
+		<label>Tags:</label>
+		<input type="text" name={{ \App\Literal::tagField() }}>
+	    </div>
 	    
 	    <div class="control">
 		<button type="reset">Reset</button>
@@ -16,7 +22,6 @@
 	    </div>
 	    
 	</form>
-	
     </div>
     
 @endsection
