@@ -39,29 +39,23 @@ class Repository
         return empty($data) ? NULL : new FileView ($data);
     }
 
-    public function all($page, string $tagsString = "") : FileViewIterator
+    public function files($page) : FileViewIterator
     {
-        $paginator;
-        $pageCap = 13;
-        
-        if (empty($tagsString)) {
-            
-            $paginator = File::paginate($pageCap, array("*"), "page", $page);
-            
-        }
-        else {
-                        
-            $tags = TagMaker::toArray($tagsString);
-
-            $paginator = File::whereHas("tags", function($query) use ($tags) {
-                $query->whereIn("tag", $tags);
-            })->paginate($pageCap, array("*"), "page", $page);
-            
-        }
-
-        return new FileViewIterator ($paginator);
-
+        $paginator = File::paginate(self::pageCap, array("*"), "page", $page);
+        return new FileViewIterator ($paginator);                       
     }
+
+    public function filesByTags(string $tagsString, $page) : FileViewIterator
+    {
+        $tags = TagMaker::toArray($tagsString);
+
+        $paginator = File::whereHas("tags", function($query) use ($tags) {
+            $query->whereIn("tag", $tags);
+        })->paginate(self::pageCap, array("*"), "page", $page);
+                    
+        return new FileViewIterator ($paginator);
+    }
+
 
     public function save($file, string $tagsString) : FileView
     {
@@ -134,4 +128,6 @@ class Repository
 
         return $data;
     }
+
+    const pageCap = 13;
 }

@@ -13,14 +13,14 @@ use App\FileView;
 use App\Repository;
 
 
-class FileController extends Controller
+class SelectController extends Controller
 {
     public function __construct(Repository $repository)
     {
         $this->repository = $repository;
     }
     
-    public function show(string $filename)
+    public function file(string $filename)
     {
         $file = $this->repository->get($filename);
         
@@ -31,11 +31,20 @@ class FileController extends Controller
         return view("file")->with("file", $file);
     }
 
-    public function showAll(int $page = 1)
+    public function files(int $page = 1)
     {
-        $files = $this->repository->all($page);
+        $files = $this->repository->files($page);
+        
         return view("main")->with("files", $files);
     }
-         
+
+    public function filesByTags(string $tags, int $page = 1)
+    {
+        $files = $this->repository->filesByTags($tags, $page);
+        
+        return view("main")->with("files", $files);
+    }
+    
+
     private $repository;
 }
