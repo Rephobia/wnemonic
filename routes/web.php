@@ -11,18 +11,20 @@
 |
 */
 
-Route::get('/edit/{filename}', "EditController@getEditForm");
-Route::get("/add", "EditController@getAddForm");
 
-Route::get('/', "FileController@files");
-Route::get('/page/{number?}',"FileController@files");
-           
-Route::get('/tag/{tags}', "FileController@filsByTags");
-Route::get('/tag/{tags}/page/{number?}', "FileController@filesByTags");
+use App\Http\Controllers\
+{SelectController, EditController};
 
-Route::get('/{filename}', "FileController@file");
+Route::get('/edit/{filename}',           [EditController::class, "getEditForm"]);
+Route::get("/add",                       [EditController::class, "getAddForm"]);
 
-Route::post("/add", "EditController@add");
-Route::post("/edit", "EditController@edit");
-Route::post("/delete", "EditController@delete");
-Route::post("/cancel", "EditController@cancel");
+Route::get('/',                          [SelectController::class, "files"]);
+Route::get('/{filename}',                [SelectController::class, "file"]);
+Route::get('/page/{number?}',            [SelectController::class, "files"]);
+Route::get('/tag/{tags}',                [SelectController::class, "filesByTags"]);
+Route::get('/tag/{tags}/page/{number?}', [SelectController::class, "filesByTags"]);
+
+Route::post("/add",    [EditController::class, "add"]);
+Route::post("/edit",   [EditController::class, "edit"]);
+Route::post("/delete", [EditController::class, "delete"]);
+Route::post("/cancel", [EditController::class, "cancel"]);

@@ -13,7 +13,7 @@ use App\FileView;
 use App\Repository;
 
 
-class FileController extends Controller
+class SelectController extends Controller
 {
     public function __construct(Repository $repository)
     {
