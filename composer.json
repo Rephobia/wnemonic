@@ -1,12 +1,12 @@
 {
-    "name": "laravel/laravel",
+    "name": "wnemonic/wnemonic",
     "type": "project",
-    "description": "The Laravel Framework.",
+    "description": "Tag based file manager",
     "keywords": [
         "framework",
         "laravel"
     ],
-    "license": "MIT",
+    "license": "AGPL-3.0-or-later",
     "require": {
         "php": "^7.2",
         "fideloper/proxy": "^4.0",
