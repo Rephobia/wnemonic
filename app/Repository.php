@@ -24,7 +24,6 @@
 
 namespace App;
 
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Model;
 use App\Literal;
 use App\Utils\FileInfo;
@@ -54,6 +53,11 @@ class Tags extends Model
 
 class Repository
 {
+    public function __construct(\Illuminate\Contracts\Filesystem\Filesystem $filesystem)
+    {
+        $this->filesystem = $filesystem;
+    }
+    
     public function get(string $fileName) : ?FileView
     {
         $data = self::getData($fileName);
@@ -78,7 +82,6 @@ class Repository
         return new FileViewIterator ($paginator);
     }
 
-
     public function save($file, string $tagsString) : FileView
     {
         $fileName = $file->getClientOriginalName();
@@ -88,7 +91,7 @@ class Repository
         $data->save();
         
         $path = FileInfo::hashPath($fileName);
-        Storage::putFileAs(".", $file, $path);
+        $this->filesystem->putFileAs(".", $file, $path);
         
         $tags = TagMaker::toArray($tagsString);
 
@@ -105,7 +108,8 @@ class Repository
         $data = self::getData($fileName);
         
         $path = FileInfo::hashPath($data->name);
-        Storage::delete($path);
+        
+        $this->filesystem->delete($path);
         $data->delete();
     }
     
@@ -124,7 +128,8 @@ class Repository
         
         $oldpath = FileInfo::hashPath($fileName);
         $newpath = FileInfo::hashPath($newName);
-        Storage::move($oldpath, $newpath);
+        
+        $this->filesystem->move($oldpath, $newpath);
 
     }
 
@@ -142,8 +147,6 @@ class Repository
         $data->tags()->sync($tagsId);
     }
 
-    
-    
     private function getData(string $fileName) : ?File
     {
         $data = File::where(Literal::nameField(), "=", $fileName)->first();
@@ -152,4 +155,6 @@ class Repository
     }
 
     const pageCap = 13;
+
+    private $filesystem;
 }

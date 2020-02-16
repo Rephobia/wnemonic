@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Storage;
 use App\Repository;
 
 
@@ -15,8 +16,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton("Repository", function ($app) {
-            return new Repository;
+        $this->app->singleton(Repository::class, function ($app) {
+            return new Repository (Storage::disk("local"));
         });
     }
 
