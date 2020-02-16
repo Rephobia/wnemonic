@@ -19,14 +19,28 @@
 
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
+ */
 
 
 namespace Tests\Feature;
 
 
 class GetPages extends \Tests\TestCase
-{    
+{
+    /**
+     * Seeds a file field in the test environment
+     * @return void
+     */
+    public function setUp() : void
+    {
+        parent::setUp();
+        
+        $fileName = "test_file";
+        $tags = "first tag, second tag";
+        
+        $this->fileView = Seeder::seed($fileName, $tags, \Storage::fake("public"));
+    }
+    
     /**
      * Checks if home page exists
      * @test
@@ -34,8 +48,8 @@ class GetPages extends \Tests\TestCase
      */
     public function homeExists() : void
     {
-        $response = $this->get("/");
-        $response->assertStatus(200);
+        $this->get("/")
+             ->assertStatus(200);
     }
 
     /**
@@ -45,7 +59,42 @@ class GetPages extends \Tests\TestCase
      */
     public function addExists() : void
     {
-        $response = $this->get("/add");
-        $response->assertStatus(200);
+        $this->get("/add")
+             ->assertStatus(200);
     }
+
+    /**
+     * Checks if a file page exists
+     * @test
+     * @return void
+     */
+    public function fileViewExists() : void
+    {        
+        $this->get("/".$this->fileView->name())
+             ->assertStatus(200);
+    }
+
+    /**
+     * Checks if a file edit page exists
+     * @test
+     * @return void
+     */
+    public function editExists() : void
+    {        
+        $this->get("/edit/".$this->fileView->name())
+             ->assertStatus(200);
+    }
+
+    /**
+     * Checks if tags page exist
+     * @test
+     * @return void
+     */
+    public function tagsExists() : void
+    {        
+        $this->get("/tag/".$this->fileView->tagsString())
+             ->assertStatus(200);
+    }
+    
+    private $fileView;
 }

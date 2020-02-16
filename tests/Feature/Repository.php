@@ -36,7 +36,7 @@ class Repository extends \Tests\TestCase
         $fileName = "test_file";
         $tags = "test_tag";
         
-        $filesystem = \Storage::fake("testing_filesystem");
+        $filesystem = \Storage::fake("local");
         
         $fileView = Seeder::seed($fileName, $tags, $filesystem);
         
