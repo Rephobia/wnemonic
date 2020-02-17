@@ -40,7 +40,7 @@ class NewFile extends BasicRequest
         $nameRules = (new FileRule($this))->required()->isFile()->unique();
         $tagRules = (new FileRule($this))->required();
 
-        return array(Literal::nameField() => $nameRules,
+        return array("file" => $nameRules,
                      Literal::tagField() => $tagRules);
     }
   
