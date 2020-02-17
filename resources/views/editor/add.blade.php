@@ -7,7 +7,7 @@
 	<form  method="post" enctype="multipart/form-data">
 	    @csrf
 	    <div class="upload">
-		<input type="file" name={{ \App\Literal::nameField() }}>
+		<input type="file" name="file">
 	    </div>
 
 	    <div class="named-input">
