@@ -38,7 +38,7 @@ class Post extends \Tests\TestCase
         $file = UploadedFile::fake()->create(self::fileName, 1024);
 
         $response = $this->post("/add",
-                                array("name" => $file,
+                                array("file" => $file,
                                       "tag" => "first, second"));
 
         $response->assertRedirect(self::fileName);
