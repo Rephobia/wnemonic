@@ -24,6 +24,9 @@ trait CreatesApplication
 
         $app->make(Kernel::class)->bootstrap();
         
+        \Storage::fake("local");
+        \Storage::fake("public");
+        
         return $app;
     }
 }
