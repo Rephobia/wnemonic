@@ -40,6 +40,6 @@ class Repository extends \Tests\TestCase
         
         $fileView = Seeder::seed($fileName, $tags, $filesystem);
         
-        $filesystem->assertExists($fileView->path());
+        \Storage::assertExists($fileView->path());
     }
 }
