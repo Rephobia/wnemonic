@@ -63,5 +63,34 @@ class Post extends \Tests\TestCase
         \Storage::assertMissing(\App\Utils\FileInfo::hashPath(self::fileName));
     }
 
+    /**
+     * Checks if post request edits a file and tags
+     * @test
+     * @return void
+     */
+    public function editFile() : void
+    {
+        Seeder::seed(self::fileName, "first, second", \Storage::disk("local"));
+
+        $newName = "newName";
+        $newTags = "newTag1, newTag2";
+        
+        $response = $this->post("/edit",
+                                array(\App\Literal::nameField() => self::fileName,
+                                      \App\Literal::newnameField() => $newName,
+                                      \App\Literal::tagField() => $newTags
+                                ));
+
+        $response->assertRedirect($newName);
+
+        $repository = \App::make(\App\Repository::class);
+        $fileView = $repository->get($newName);
+        
+        $this->assertNotEmpty($fileView);
+        $this->assertEquals($fileView->name(), $newName);
+        $this->assertEquals($fileView->tags(), \App\Utils\TagMaker::toArray($newTags));
+    }
+
+    
     private const fileName = "test_file";
 }
