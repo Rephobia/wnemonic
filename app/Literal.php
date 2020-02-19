@@ -41,4 +41,9 @@ class Literal
     {
         return "tag";
     }
+    
+    public static function fileField() : string
+    {
+        return "file";
+    }
 }
