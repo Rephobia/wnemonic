@@ -60,7 +60,7 @@ class Repository
     
     public function get(string $fileName) : ?FileView
     {
-        $data = self::getData($fileName);
+        $data = $this->getData($fileName);
                 
         return empty($data) ? NULL : new FileView ($data);
     }
@@ -105,7 +105,7 @@ class Repository
 
     public function delete(string $fileName)
     {
-        $data = self::getData($fileName);
+        $data = $this->getData($fileName);
         
         $path = FileInfo::hashPath($data->name);
         
@@ -154,7 +154,7 @@ class Repository
         return $data;
     }
 
-    const pageCap = 13;
+    private const pageCap = 13;
 
     private $filesystem;
 }

@@ -53,17 +53,17 @@ class FileView
     
     public function link() : string
     {
-        return Storage::disk("public")->url(self::path());
+        return Storage::disk("public")->url($this->path());
     }
     
     public function content() : string
     {
-        return Storage::disk("public")->get(self::path());
+        return Storage::disk("public")->get($this->path());
     }
     
     public function type() : string
     {
-        return Storage::disk("public")->mimeType(self::path());
+        return Storage::disk("public")->mimeType($this->path());
     }
     
     public function tags() : array
@@ -80,7 +80,7 @@ class FileView
     
     public function tagsString() : string
     {
-        return implode(",", self::tags());
+        return implode(",", $this->tags());
     }
     
     public function __get($field)
