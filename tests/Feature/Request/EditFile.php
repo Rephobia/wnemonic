@@ -43,7 +43,7 @@ class EditFile extends \Tests\TestCase
         $newName = "new";
         $newTags = "tagNew1, tagNew2";
         
-        $response = self::send($oldName, $oldTags, $newName, $newTags);
+        $response = $this->send($oldName, $oldTags, $newName, $newTags);
         
         $response->assertRedirect($newName);
     }
@@ -61,8 +61,8 @@ class EditFile extends \Tests\TestCase
         $newName = "new";
         $newTags = "tagNew1, tagNew2";
         
-        self::send($oldName, $oldTags, $newName, $newTags);
-        self::assertFile($newName, $newTags);
+        $this->send($oldName, $oldTags, $newName, $newTags);
+        $this->assertFile($newName, $newTags);
     }
 
     /**
@@ -78,8 +78,8 @@ class EditFile extends \Tests\TestCase
         $newName = "new";
         $newTags = $oldTags;
         
-        self::send($oldName, $oldTags, $newName, $newTags);
-        self::assertFile($newName, $newTags);
+        $this->send($oldName, $oldTags, $newName, $newTags);
+        $this->assertFile($newName, $newTags);
     }
     
     /**
@@ -95,8 +95,8 @@ class EditFile extends \Tests\TestCase
         $newName = $oldName;
         $newTags = "tagNew1, tagNew2";
         
-        self::send($oldName, $oldTags, $newName, $newTags);
-        self::assertFile($newName, $newTags);
+        $this->send($oldName, $oldTags, $newName, $newTags);
+        $this->assertFile($newName, $newTags);
     }
     
     /**
@@ -112,8 +112,8 @@ class EditFile extends \Tests\TestCase
         $newName = $oldName;
         $newTags = $oldTags;
         
-        self::send($oldName, $oldTags, $newName, $newTags);
-        self::assertFile($newName, $newTags);
+        $this->send($oldName, $oldTags, $newName, $newTags);
+        $this->assertFile($newName, $newTags);
     }
 
     
