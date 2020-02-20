@@ -31,9 +31,10 @@ use App\Utils\FileInfo;
 
 class FileView
 {
-    public function __construct($data)
+    public function __construct($data, $filesystem)
     {
         $this->data = $data;
+        $this->filesystem = $filesystem;
     }
     
     public function name() : string
@@ -53,17 +54,17 @@ class FileView
     
     public function link() : string
     {
-        return Storage::disk("public")->url($this->path());
+        return $this->filesystem->url($this->path());
     }
     
     public function content() : string
     {
-        return Storage::disk("public")->get($this->path());
+        return $this->filesystem->get($this->path());
     }
     
     public function type() : string
     {
-        return Storage::disk("public")->mimeType($this->path());
+        return $this->filesystem->mimeType($this->path());
     }
     
     public function tags() : array
@@ -98,6 +99,8 @@ class FileView
     
     private $data;
     private $tags = array();
+    private $filesystem;
+    
     
     private $friends = array("App\Repository");
 }

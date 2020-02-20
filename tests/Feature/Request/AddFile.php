@@ -24,13 +24,22 @@
 
 namespace Tests\Feature\Request;
 
-use Illuminate\Http\UploadedFile;
+
 use \App\Literal;
 use \App\Utils\FileInfo;
+use \Tests\Feature\FakeFile;
 
 
 class AddFile extends \Tests\TestCase
 {
+
+    public function setUp() : void
+    {
+        parent::setUp();
+        
+        $this->fakeFile = new FakeFile;
+    }
+    
     /**
      * Checks if post add request redirects to a new file
      * @test
@@ -38,12 +47,11 @@ class AddFile extends \Tests\TestCase
      */
     public function redirectAfterAdd() : void
     {
-        $fileName = "newFile";
-        $tags = "tag1, tag2";
-
-        $response = $this->send($fileName, $tags);
-
-        $response->assertRedirect($fileName);
+        $response = $this->post("/add",
+                                array(Literal::fileField() => $this->fakeFile->file(),
+                                      Literal::tagField() => $this->fakeFile->tags()));
+   
+        $response->assertRedirect($this->fakeFile->name());
     }
     
     /**
@@ -53,21 +61,13 @@ class AddFile extends \Tests\TestCase
      */
     public function addFile() : void
     {
-        $fileName = "newFile";
-        $tags = "tag1, tag2";
-
-        $this->send($fileName, $tags);
-        
-        \Storage::assertExists(FileInfo::hashPath($fileName));
+        $this->post("/add",
+                    array(Literal::fileField() => $this->fakeFile->file(),
+                          Literal::tagField() => $this->fakeFile->tags()));
+   
+        \Storage::assertExists(FileInfo::hashPath($this->fakeFile->name()));
     }
-    
-    private function send($fileName, $tags)
-    {
-        $file = UploadedFile::fake()->create($fileName, 1024);
 
-        $response = $this->post("/add",
-                                array(Literal::fileField() => $file,
-                                      Literal::tagField() => $tags));
-        return $response;
-    }
+   
+    private FakeFile $fakeFile;
 }

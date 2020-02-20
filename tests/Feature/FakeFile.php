@@ -19,27 +19,42 @@
 
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
+ */
 
 
 namespace Tests\Feature;
 
-class Repository extends \Tests\TestCase
-{    
-    /**
-     * Check if a file was written to disk
-     * @test
-     * @return void
-     */
-    public function writeFile() : void
+use Illuminate\Http\UploadedFile;
+
+class FakeFile
+{
+    public function __construct($name = "fileName", $tags = "tag1, tag2", $kilobytes = 1024)
     {
-        $fileName = "test_file";
-        $tags = "test_tag";
+        $this->name = $name;
+        $this->tags = $tags;
+        $this->kilobytes = $kilobytes;
         
-        $filesystem = \Storage::fake("local");
-        
-        $fileView = Seeder::seed($fileName, $tags, $filesystem);
-        
-        \Storage::assertExists($fileView->path());
+        $this->file = UploadedFile::fake()->create($this->name, $this->kilobytes);
     }
+    public function file() : UploadedFile
+    {
+        return $this->file;
+    }
+    public function name() : string
+    {
+        return $this->name;
+    }
+    public function tags() : string
+    {
+        return $this->tags;
+    }
+    public function size() : int
+    {
+        return $this->size;
+    }
+    
+    private string $name;
+    private string $tags;
+    private int $kilobytes;
+    private UploadedFile $file;
 }
