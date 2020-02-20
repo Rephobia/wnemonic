@@ -17,7 +17,7 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton(Repository::class, function ($app) {
-            return new Repository (Storage::disk("local"));
+            return new Repository (Storage::disk("public"));
         });
     }
 

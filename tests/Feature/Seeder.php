@@ -33,12 +33,19 @@ class Seeder
      * @return \App\FileView
      */
     public static function seed(string $fileName, string $tags,
-                                $filesystem, $kilobytes = 1024) : \App\FileView
+                                $kilobytes = 1024) : \App\FileView
     {        
         $file = UploadedFile::fake()->create($fileName, $kilobytes);
                 
-        $repository = new \App\Repository($filesystem);
+        $repository = \App::make(\App\Repository::class);
         
         return $repository->save($file, $tags);
+    }
+    
+    public static function seedFile(FakeFile $fakeFile) : \App\FileView
+    {                        
+        $repository = \App::make(\App\Repository::class);
+        
+        return $repository->save($fakeFile->file(), $fakeFile->tags());
     }
 }

@@ -25,6 +25,8 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use \Illuminate\Contracts\Filesystem\Filesystem;
+
 use App\Literal;
 use App\Utils\FileInfo;
 use App\Utils\TagMaker;
@@ -53,7 +55,7 @@ class Tags extends Model
 
 class Repository
 {
-    public function __construct(\Illuminate\Contracts\Filesystem\Filesystem $filesystem)
+    public function __construct(Filesystem $filesystem)
     {
         $this->filesystem = $filesystem;
     }
@@ -62,13 +64,13 @@ class Repository
     {
         $data = $this->getData($fileName);
                 
-        return empty($data) ? NULL : new FileView ($data);
+        return empty($data) ? NULL : new FileView ($data, $this->filesystem);
     }
 
     public function files($page) : FileViewIterator
     {
         $paginator = File::paginate(self::pageCap, array("*"), "page", $page);
-        return new FileViewIterator ($paginator);                       
+        return new FileViewIterator ($paginator, $this->filesystem);
     }
 
     public function filesByTags(string $tagsString, $page) : FileViewIterator
@@ -79,7 +81,7 @@ class Repository
             $query->whereIn("tag", $tags);
         })->paginate(self::pageCap, array("*"), "page", $page);
                     
-        return new FileViewIterator ($paginator);
+        return new FileViewIterator ($paginator, $this->filesystem);
     }
 
     public function save($file, string $tagsString) : FileView
@@ -100,7 +102,7 @@ class Repository
             $data->tags()->attach($tag->id);
         }
 
-        return new FileView ($data);
+        return new FileView ($data, $this->filesystem);
     }
 
     public function delete(string $fileName)

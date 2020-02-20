@@ -37,7 +37,7 @@ class GetPages extends \Tests\TestCase
         
         $fileName = "test_file";
         $tags = "first tag, second tag";
-        $this->fileView = Seeder::seed($fileName, $tags, \Storage::disk("public"));
+        $this->fileView = Seeder::seed($fileName, $tags);
     }
     
     /**
