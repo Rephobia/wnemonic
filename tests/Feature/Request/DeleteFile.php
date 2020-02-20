@@ -27,10 +27,19 @@ namespace Tests\Feature\Request;
 use \App\Literal;
 use \App\Utils\FileInfo;
 use \Tests\Feature\Seeder;
+use \Tests\Feature\FakeFile;
 
 
 class DeleteFile extends \Tests\TestCase
 {
+    public function setUp() : void
+    {
+        parent::setUp();
+        
+        $this->fakeFile = new FakeFile;
+        Seeder::seedFile($this->fakeFile);
+    }
+    
     /**
      * Checks if post delete request redirects to home
      * @test
@@ -38,11 +47,9 @@ class DeleteFile extends \Tests\TestCase
      */
     public function redirectAfterDelete() : void
     {
-        $fileName = "newFile";
-        $tags = "tag1, tag2";
-                
-        $response = $this->send($fileName, $tags);
-
+        $response = $this->post("/delete",
+                                array(Literal::nameField() => $this->fakeFile->name()));
+        
         $response->assertRedirect("/");
     }
 
@@ -53,21 +60,11 @@ class DeleteFile extends \Tests\TestCase
      */
     public function deleteFile() : void
     {
-        $fileName = "newFile";
-        $tags = "tag1, tag2";
-                
-        $response = $this->send($fileName, $tags);
+        $this->post("/delete",
+                    array(Literal::nameField() => $this->fakeFile->name()));
 
-        \Storage::assertMissing(FileInfo::hashPath($fileName));
+        \Storage::assertMissing(FileInfo::hashPath($this->fakeFile->name()));
     }
 
-    private function send($fileName, $tags)
-    {
-        Seeder::seed($fileName, $tags, \Storage::disk("local"));
-
-        $response = $this->post("/delete",
-                                array(Literal::nameField() => $fileName));
-        
-        return $response;
-    }
+    private FakeFile $fakeFile;
 }

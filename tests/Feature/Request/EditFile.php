@@ -24,12 +24,23 @@
 
 namespace Tests\Feature\Request;
 
-use Tests\Feature\Seeder;
 use App\Literal;
 use App\Utils\TagMaker;
 
+use Tests\Feature\Seeder;
+use Tests\Feature\FakeFile;
+
+
 class EditFile extends \Tests\TestCase
 {
+    public function setUp() : void
+    {
+        parent::setUp();
+        
+        $this->oldFile = new FakeFile;
+        Seeder::seedFile($this->oldFile);
+    }
+    
     /**
      * Checks if post request redirects to new name after edit
      * @test
@@ -37,13 +48,13 @@ class EditFile extends \Tests\TestCase
      */
     public function redirectAfterEdit() : void
     {
-        $oldName = "old";
-        $oldTags = "tag1, tag2";
+        $newName = $this->oldFile->name()."newName";
+        $newTags = $this->oldFile->tags().",newTag";
         
-        $newName = "new";
-        $newTags = "tagNew1, tagNew2";
-        
-        $response = $this->send($oldName, $oldTags, $newName, $newTags);
+        $response = $this->post("/edit",
+                                array(Literal::nameField() => $this->oldFile->name(),
+                                      Literal::newnameField() => $newName,
+                                      Literal::tagField() => $newTags));
         
         $response->assertRedirect($newName);
     }
@@ -55,13 +66,14 @@ class EditFile extends \Tests\TestCase
      */
     public function changeNameAndTags() : void
     {
-        $oldName = "old";
-        $oldTags = "tag1, tag2";
+        $newName = $this->oldFile->name()."newName";
+        $newTags = $this->oldFile->tags().",newTag";
+                 
+        $this->post("/edit",
+                    array(Literal::nameField() => $this->oldFile->name(),
+                          Literal::newnameField() => $newName,
+                          Literal::tagField() => $newTags));
         
-        $newName = "new";
-        $newTags = "tagNew1, tagNew2";
-        
-        $this->send($oldName, $oldTags, $newName, $newTags);
         $this->assertFile($newName, $newTags);
     }
 
@@ -72,13 +84,14 @@ class EditFile extends \Tests\TestCase
      */
     public function changeName() : void
     {
-        $oldName = "old";
-        $oldTags = "tag1, tag2";
+        $newName = $this->oldFile->name()."newName";
+        $newTags = $this->oldFile->tags();
         
-        $newName = "new";
-        $newTags = $oldTags;
+        $this->post("/edit",
+                    array(Literal::nameField() => $this->oldFile->name(),
+                          Literal::newnameField() => $newName,
+                          Literal::tagField() => $newTags));
         
-        $this->send($oldName, $oldTags, $newName, $newTags);
         $this->assertFile($newName, $newTags);
     }
     
@@ -89,13 +102,14 @@ class EditFile extends \Tests\TestCase
      */
     public function changeTags() : void
     {
-        $oldName = "old";
-        $oldTags = "tag1, tag2";
+        $newName = $this->oldFile->name();
+        $newTags = $this->oldFile->tags().",newTag";
         
-        $newName = $oldName;
-        $newTags = "tagNew1, tagNew2";
+        $this->post("/edit",
+                    array(Literal::nameField() => $newName,
+                          Literal::newnameField() => $newName,
+                          Literal::tagField() => $newTags));
         
-        $this->send($oldName, $oldTags, $newName, $newTags);
         $this->assertFile($newName, $newTags);
     }
     
@@ -106,30 +120,17 @@ class EditFile extends \Tests\TestCase
      */
     public function changeNothing() : void
     {
-        $oldName = "old";
-        $oldTags = "tag1, tag2";
+        $newName = $this->oldFile->name();
+        $newTags = $this->oldFile->tags();
         
-        $newName = $oldName;
-        $newTags = $oldTags;
+        $this->post("/edit",
+                    array(Literal::nameField() => $newName,
+                          Literal::newnameField() => $newName,
+                          Literal::tagField() => $newTags));
         
-        $this->send($oldName, $oldTags, $newName, $newTags);
         $this->assertFile($newName, $newTags);
     }
 
-    
-    private function send(string $oldName, string $oldTags,
-                          string $newName, string $tags)
-    {
-        Seeder::seed($oldName, $oldTags, \Storage::disk("local"));
-
-        $response = $this->post("/edit",
-                                array(Literal::nameField() => $oldName,
-                                      Literal::newnameField() => $newName,
-                                      Literal::tagField() => $tags
-                                ));
-        return $response;
-    }
-    
     private function assertFile($fileName, $tags)
     {
         $repository = \App::make(\App\Repository::class);
@@ -138,4 +139,6 @@ class EditFile extends \Tests\TestCase
         $this->assertNotEmpty($fileView);
         $this->assertEquals($fileView->tags(), TagMaker::toArray($tags));
     }
+    
+    private FakeFile $oldFile;
 }
