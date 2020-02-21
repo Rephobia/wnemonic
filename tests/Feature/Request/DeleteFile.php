@@ -24,23 +24,24 @@
 
 namespace Tests\Feature\Request;
 
-use Illuminate\Support\Facades\Validator;
-
 use \App\Literal;
 use \App\Utils\FileInfo;
+
 use \Tests\Feature\Seeder;
 use \Tests\Feature\FakeFile;
 
 
 class DeleteFile extends \Tests\TestCase
 {
+    use \Illuminate\Foundation\Testing\RefreshDatabase;
+    use \Tests\Feature\Request\ValidateField;
+    
     private FakeFile $fakeFile;
 
     public function setUp() : void
     {
         parent::setUp();
         $this->fakeFile = new FakeFile;
-        Seeder::seedFile($this->fakeFile);
     }
     
     /**
@@ -50,6 +51,8 @@ class DeleteFile extends \Tests\TestCase
      */
     public function redirectAfterDelete() : void
     {
+        Seeder::seedFile($this->fakeFile);
+
         $response = $this->post("/delete",
                                 array(Literal::nameField() => $this->fakeFile->name()));
         
@@ -63,6 +66,8 @@ class DeleteFile extends \Tests\TestCase
      */
     public function deleteFile() : void
     {
+        Seeder::seedFile($this->fakeFile);
+
         $this->post("/delete",
                     array(Literal::nameField() => $this->fakeFile->name()));
 
@@ -70,19 +75,18 @@ class DeleteFile extends \Tests\TestCase
     }
     
     /**
-     * Post request tries to delete a non-existing file
+     * Post request tries to delete a nonexistent file
      * @test
      * @return void
      */
-    public function fileNonExist() : void
+    public function fileNotExists() : void
     {
         $request = new \App\Http\Requests\CheckFile;
         
-        $data = array(Literal::nameField() => $this->fakeFile->name()."nonExist");
-        $rules = array(Literal::nameField() => $request->rules()[Literal::nameField()]);
-
-        $validator = Validator::make($data, $rules);
+        $result = $this->validateField(Literal::nameField(),
+                                       $this->fakeFile->name(),
+                                       $request);
         
-        $this->assertFalse($validator->passes());
+        $this->assertFalse($result);
     }
 }
