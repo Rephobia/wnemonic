@@ -25,18 +25,23 @@
 namespace Tests\Feature\Request;
 
 
+use Illuminate\Support\Facades\Validator;
+
 use \App\Literal;
 use \App\Utils\FileInfo;
+
+use \Tests\Feature\Seeder;
 use \Tests\Feature\FakeFile;
 
 
 class AddFile extends \Tests\TestCase
 {
+    private FakeFile $fakeFile;
+    
 
     public function setUp() : void
     {
         parent::setUp();
-        
         $this->fakeFile = new FakeFile;
     }
     
@@ -67,7 +72,59 @@ class AddFile extends \Tests\TestCase
    
         \Storage::assertExists(FileInfo::hashPath($this->fakeFile->name()));
     }
+    
+    /**
+     * Checks if add request doesn't contain a file
+     * @test
+     * @return void
+     */
+    public function fileMissing() : void
+    {
+        $request = new \App\Http\Requests\NewFile;
+        
+        $data = array(Literal::fileField() => $this->fakeFile->file());
+        $rules = array(Literal::fileField() => $request->rules()[Literal::fileField()]);
 
-   
-    private FakeFile $fakeFile;
+        $validator = Validator::make($data, $rules);
+        
+        $this->assertFalse($validator->passes());
+    }
+    
+    /**
+     * Checks if add request doesn't contain tags
+     * @test
+     * @return void
+     */
+    public function tagsMissing() : void
+    {
+        $request = new \App\Http\Requests\NewFile;
+        
+        $data = array(Literal::tagField() => NULL);
+        $rules = array(Literal::tagField() => $request->rules()[Literal::tagField()]);
+
+        $validator = Validator::make($data, $rules);
+        
+        $this->assertFalse($validator->passes());
+    }
+    
+    /**
+     * Checks if add request contains a unique file
+     * @test
+     * @return void
+     */
+    public function uniqueFile() : void
+    {
+        $request = new \App\Http\Requests\NewFile;
+        
+        Seeder::seed($this->fakeFile->name(), $this->fakeFile->tags());
+        
+        $request->files->set(Literal::fileField(), $this->fakeFile->file());
+        
+        $data = array(Literal::fileField() => $this->fakeFile->file());
+        $rules = array(Literal::fileField() => $request->rules()[Literal::fileField()]);
+
+        $validator = Validator::make($data, $rules);
+        
+        $this->assertFalse($validator->passes());
+    }
 }
