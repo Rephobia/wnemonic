@@ -24,6 +24,8 @@
 
 namespace Tests\Feature\Request;
 
+use Illuminate\Support\Facades\Validator;
+
 use App\Literal;
 use App\Utils\TagMaker;
 
@@ -33,6 +35,8 @@ use Tests\Feature\FakeFile;
 
 class EditFile extends \Tests\TestCase
 {
+    private FakeFile $oldFile;
+
     public function setUp() : void
     {
         parent::setUp();
@@ -131,6 +135,109 @@ class EditFile extends \Tests\TestCase
         $this->assertFile($newName, $newTags);
     }
 
+    /**
+     * Checks if add request doesn't contain a new name
+     * @test
+     * @return void
+     */
+    public function oldNameMissing() : void
+    {
+        $request = new \App\Http\Requests\EditFile;
+        
+        $data = array(Literal::nameField() => NULL);
+        $rules = array(Literal::nameField() => $request->rules()[Literal::nameField()]);
+
+        $validator = Validator::make($data, $rules);
+        
+        $this->assertFalse($validator->passes());
+    }
+    
+    /**
+     * Checks if add request doesn't contain a new name
+     * @test
+     * @return void
+     */
+    public function newNameMissing() : void
+    {
+        $request = new \App\Http\Requests\EditFile;
+        
+        $data = array(Literal::newnameField() => NULL);
+        $rules = array(Literal::newnameField() => $request->rules()[Literal::newnameField()]);
+
+        $validator = Validator::make($data, $rules);
+        
+        $this->assertFalse($validator->passes());
+    }
+    
+    /**
+     * Checks if add request doesn't contain tags
+     * @test
+     * @return void
+     */
+    public function tagsMissing() : void
+    {
+        $request = new \App\Http\Requests\EditFile;
+        
+        $data = array(Literal::tagField() => NULL);
+        $rules = array(Literal::tagField() => $request->rules()[Literal::tagField()]);
+
+        $validator = Validator::make($data, $rules);
+        
+        $this->assertFalse($validator->passes());
+    }
+    
+    
+    /**
+     * Checks if post request ignores a old name
+     * @test
+     * @return void
+     */
+    public function ignoreOldName() : void
+    {
+        $request = new \App\Http\Requests\EditFile;
+        $request->merge(array(Literal::nameField() => $this->oldFile->name()));
+
+        $data = array(Literal::newnameField() => $this->oldFile->name());
+        $rules = array(Literal::newnameField() => $request->rules()[Literal::newnameField()]);
+
+        $validator = Validator::make($data, $rules);
+
+        $this->assertTrue($validator->passes());
+    }
+    
+    /**
+     * Checks if post request tries to edit a non-existing file
+     * @test
+     * @return void
+     */
+    public function fileNonExist() : void
+    {
+        $request = new \App\Http\Requests\EditFile;
+        
+        $data = array(Literal::nameField() => $this->oldFile->name()."nonExist");
+        $rules = array(Literal::nameField() => $request->rules()[Literal::nameField()]);
+
+        $validator = Validator::make($data, $rules);
+        
+        $this->assertFalse($validator->passes());
+    }
+
+    /**
+     * Checks if post request tries to change name to already existing name 
+     * @test
+     * @return void
+     */
+    public function nameAlreadyExists() : void
+    {
+        $request = new \App\Http\Requests\EditFile;
+        
+        $data = array(Literal::newnameField() => $this->oldFile->name());
+        $rules = array(Literal::newnameField() => $request->rules()[Literal::newnameField()]);
+
+        $validator = Validator::make($data, $rules);
+        $this->assertFalse($validator->passes());
+    }
+    
     private function assertFile($fileName, $tags)
     {
         $repository = \App::make(\App\Repository::class);
@@ -139,6 +246,4 @@ class EditFile extends \Tests\TestCase
         $this->assertNotEmpty($fileView);
         $this->assertEquals($fileView->tags(), TagMaker::toArray($tags));
     }
-    
-    private FakeFile $oldFile;
 }

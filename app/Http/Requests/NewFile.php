@@ -21,12 +21,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-namespace App\Http\Requests;
 
+namespace App\Http\Requests;
 
 use App\Literal;
 use App\Rules\FileRule;
 use App\Http\Requests\BasicRequest;
+
 
 class NewFile extends BasicRequest
 {    
