@@ -24,6 +24,8 @@
 
 namespace Tests\Feature\Request;
 
+use Illuminate\Support\Facades\Validator;
+
 use \App\Literal;
 use \App\Utils\FileInfo;
 use \Tests\Feature\Seeder;
@@ -32,10 +34,11 @@ use \Tests\Feature\FakeFile;
 
 class DeleteFile extends \Tests\TestCase
 {
+    private FakeFile $fakeFile;
+
     public function setUp() : void
     {
         parent::setUp();
-        
         $this->fakeFile = new FakeFile;
         Seeder::seedFile($this->fakeFile);
     }
@@ -65,6 +68,21 @@ class DeleteFile extends \Tests\TestCase
 
         \Storage::assertMissing(FileInfo::hashPath($this->fakeFile->name()));
     }
+    
+    /**
+     * Post request tries to delete a non-existing file
+     * @test
+     * @return void
+     */
+    public function fileNonExist() : void
+    {
+        $request = new \App\Http\Requests\CheckFile;
+        
+        $data = array(Literal::nameField() => $this->fakeFile->name()."nonExist");
+        $rules = array(Literal::nameField() => $request->rules()[Literal::nameField()]);
 
-    private FakeFile $fakeFile;
+        $validator = Validator::make($data, $rules);
+        
+        $this->assertFalse($validator->passes());
+    }
 }
