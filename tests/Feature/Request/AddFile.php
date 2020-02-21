@@ -25,8 +25,6 @@
 namespace Tests\Feature\Request;
 
 
-use Illuminate\Support\Facades\Validator;
-
 use \App\Literal;
 use \App\Utils\FileInfo;
 
@@ -38,7 +36,9 @@ class AddFile extends \Tests\TestCase
 {
     private FakeFile $fakeFile;
     
-
+    use \Illuminate\Foundation\Testing\RefreshDatabase;
+    use \Tests\Feature\Request\ValidateField;
+    
     public function setUp() : void
     {
         parent::setUp();
@@ -81,13 +81,12 @@ class AddFile extends \Tests\TestCase
     public function fileMissing() : void
     {
         $request = new \App\Http\Requests\NewFile;
-        
-        $data = array(Literal::fileField() => $this->fakeFile->file());
-        $rules = array(Literal::fileField() => $request->rules()[Literal::fileField()]);
 
-        $validator = Validator::make($data, $rules);
+        $result = $this->validateField(Literal::fileField(),
+                                       NULL,
+                                       $request);
         
-        $this->assertFalse($validator->passes());
+        $this->assertFalse($result);
     }
     
     /**
@@ -99,12 +98,11 @@ class AddFile extends \Tests\TestCase
     {
         $request = new \App\Http\Requests\NewFile;
         
-        $data = array(Literal::tagField() => NULL);
-        $rules = array(Literal::tagField() => $request->rules()[Literal::tagField()]);
-
-        $validator = Validator::make($data, $rules);
+        $result = $this->validateField(Literal::tagField(),
+                                       NULL,
+                                       $request);
         
-        $this->assertFalse($validator->passes());
+        $this->assertFalse($result);
     }
     
     /**
@@ -120,11 +118,10 @@ class AddFile extends \Tests\TestCase
         
         $request->files->set(Literal::fileField(), $this->fakeFile->file());
         
-        $data = array(Literal::fileField() => $this->fakeFile->file());
-        $rules = array(Literal::fileField() => $request->rules()[Literal::fileField()]);
-
-        $validator = Validator::make($data, $rules);
+        $result = $this->validateField(Literal::fileField(),
+                                       $this->fakeFile->file(),
+                                       $request);
         
-        $this->assertFalse($validator->passes());
+        $this->assertFalse($result);
     }
 }

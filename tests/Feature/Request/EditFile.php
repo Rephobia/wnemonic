@@ -24,7 +24,6 @@
 
 namespace Tests\Feature\Request;
 
-use Illuminate\Support\Facades\Validator;
 
 use App\Literal;
 use App\Utils\TagMaker;
@@ -35,14 +34,16 @@ use Tests\Feature\FakeFile;
 
 class EditFile extends \Tests\TestCase
 {
-    private FakeFile $oldFile;
+    use \Illuminate\Foundation\Testing\RefreshDatabase;
+    use \Tests\Feature\Request\ValidateField;
+
+    private FakeFile $fakeFile;
 
     public function setUp() : void
     {
         parent::setUp();
         
-        $this->oldFile = new FakeFile;
-        Seeder::seedFile($this->oldFile);
+        $this->fakeFile = new FakeFile;
     }
     
     /**
@@ -52,11 +53,13 @@ class EditFile extends \Tests\TestCase
      */
     public function redirectAfterEdit() : void
     {
-        $newName = $this->oldFile->name()."newName";
-        $newTags = $this->oldFile->tags().",newTag";
+        Seeder::seedFile($this->fakeFile);
+
+        $newName = $this->fakeFile->name()."newName";
+        $newTags = $this->fakeFile->tags().",newTag";
         
         $response = $this->post("/edit",
-                                array(Literal::nameField() => $this->oldFile->name(),
+                                array(Literal::nameField() => $this->fakeFile->name(),
                                       Literal::newnameField() => $newName,
                                       Literal::tagField() => $newTags));
         
@@ -70,11 +73,13 @@ class EditFile extends \Tests\TestCase
      */
     public function changeNameAndTags() : void
     {
-        $newName = $this->oldFile->name()."newName";
-        $newTags = $this->oldFile->tags().",newTag";
+        Seeder::seedFile($this->fakeFile);
+
+        $newName = $this->fakeFile->name()."newName";
+        $newTags = $this->fakeFile->tags().",newTag";
                  
         $this->post("/edit",
-                    array(Literal::nameField() => $this->oldFile->name(),
+                    array(Literal::nameField() => $this->fakeFile->name(),
                           Literal::newnameField() => $newName,
                           Literal::tagField() => $newTags));
         
@@ -88,11 +93,13 @@ class EditFile extends \Tests\TestCase
      */
     public function changeName() : void
     {
-        $newName = $this->oldFile->name()."newName";
-        $newTags = $this->oldFile->tags();
+        Seeder::seedFile($this->fakeFile);
+
+        $newName = $this->fakeFile->name()."newName";
+        $newTags = $this->fakeFile->tags();
         
         $this->post("/edit",
-                    array(Literal::nameField() => $this->oldFile->name(),
+                    array(Literal::nameField() => $this->fakeFile->name(),
                           Literal::newnameField() => $newName,
                           Literal::tagField() => $newTags));
         
@@ -106,8 +113,10 @@ class EditFile extends \Tests\TestCase
      */
     public function changeTags() : void
     {
-        $newName = $this->oldFile->name();
-        $newTags = $this->oldFile->tags().",newTag";
+        Seeder::seedFile($this->fakeFile);
+
+        $newName = $this->fakeFile->name();
+        $newTags = $this->fakeFile->tags().",newTag";
         
         $this->post("/edit",
                     array(Literal::nameField() => $newName,
@@ -124,8 +133,10 @@ class EditFile extends \Tests\TestCase
      */
     public function changeNothing() : void
     {
-        $newName = $this->oldFile->name();
-        $newTags = $this->oldFile->tags();
+        Seeder::seedFile($this->fakeFile);
+
+        $newName = $this->fakeFile->name();
+        $newTags = $this->fakeFile->tags();
         
         $this->post("/edit",
                     array(Literal::nameField() => $newName,
@@ -144,12 +155,11 @@ class EditFile extends \Tests\TestCase
     {
         $request = new \App\Http\Requests\EditFile;
         
-        $data = array(Literal::nameField() => NULL);
-        $rules = array(Literal::nameField() => $request->rules()[Literal::nameField()]);
-
-        $validator = Validator::make($data, $rules);
+        $result = $this->validateField(Literal::nameField(),
+                                       NULL,
+                                       $request);
         
-        $this->assertFalse($validator->passes());
+        $this->assertFalse($result);
     }
     
     /**
@@ -161,12 +171,11 @@ class EditFile extends \Tests\TestCase
     {
         $request = new \App\Http\Requests\EditFile;
         
-        $data = array(Literal::newnameField() => NULL);
-        $rules = array(Literal::newnameField() => $request->rules()[Literal::newnameField()]);
-
-        $validator = Validator::make($data, $rules);
+        $result = $this->validateField(Literal::newnameField(),
+                                       NULL,
+                                       $request);
         
-        $this->assertFalse($validator->passes());
+        $this->assertFalse($result);
     }
     
     /**
@@ -178,14 +187,12 @@ class EditFile extends \Tests\TestCase
     {
         $request = new \App\Http\Requests\EditFile;
         
-        $data = array(Literal::tagField() => NULL);
-        $rules = array(Literal::tagField() => $request->rules()[Literal::tagField()]);
-
-        $validator = Validator::make($data, $rules);
+        $result = $this->validateField(Literal::tagField(),
+                                       NULL,
+                                       $request);
         
-        $this->assertFalse($validator->passes());
+        $this->assertFalse($result);
     }
-    
     
     /**
      * Checks if post request ignores a old name
@@ -194,48 +201,50 @@ class EditFile extends \Tests\TestCase
      */
     public function ignoreOldName() : void
     {
+        Seeder::seedFile($this->fakeFile);
+
         $request = new \App\Http\Requests\EditFile;
-        $request->merge(array(Literal::nameField() => $this->oldFile->name()));
+        $request->merge(array(Literal::nameField() => $this->fakeFile->name()));
 
-        $data = array(Literal::newnameField() => $this->oldFile->name());
-        $rules = array(Literal::newnameField() => $request->rules()[Literal::newnameField()]);
-
-        $validator = Validator::make($data, $rules);
-
-        $this->assertTrue($validator->passes());
+        $result = $this->validateField(Literal::newnameField(),
+                                       $this->fakeFile->name(),
+                                       $request);
+        
+        $this->assertTrue($result);
     }
     
     /**
-     * Checks if post request tries to edit a non-existing file
+     * Checks if post request tries to edit a nonexistent file
      * @test
      * @return void
      */
-    public function fileNonExist() : void
+    public function fileNotExists() : void
     {
         $request = new \App\Http\Requests\EditFile;
         
-        $data = array(Literal::nameField() => $this->oldFile->name()."nonExist");
-        $rules = array(Literal::nameField() => $request->rules()[Literal::nameField()]);
-
-        $validator = Validator::make($data, $rules);
+        $result = $this->validateField(Literal::nameField(),
+                                       $this->fakeFile->name()."notExists",
+                                       $request);
         
-        $this->assertFalse($validator->passes());
+        $this->assertFalse($result);
     }
 
     /**
-     * Checks if post request tries to change name to already existing name 
+     * Checks if post request tries to change already existing name 
      * @test
      * @return void
      */
     public function nameAlreadyExists() : void
     {
+        Seeder::seedFile($this->fakeFile);
+
         $request = new \App\Http\Requests\EditFile;
         
-        $data = array(Literal::newnameField() => $this->oldFile->name());
-        $rules = array(Literal::newnameField() => $request->rules()[Literal::newnameField()]);
-
-        $validator = Validator::make($data, $rules);
-        $this->assertFalse($validator->passes());
+        $result = $this->validateField(Literal::newnameField(),
+                                       $this->fakeFile->name(),
+                                       $request);
+        
+        $this->assertFalse($result);
     }
     
     private function assertFile($fileName, $tags)

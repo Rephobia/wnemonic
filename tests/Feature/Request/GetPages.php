@@ -27,19 +27,8 @@ namespace Tests\Feature;
 
 class GetPages extends \Tests\TestCase
 {
-    /**
-     * Seeds a file field in the test environment
-     * @return void
-     */
-    public function setUp() : void
-    {
-        parent::setUp();
-        
-        $fileName = "test_file";
-        $tags = "first tag, second tag";
-        $this->fileView = Seeder::seed($fileName, $tags);
-    }
-    
+    use \Illuminate\Foundation\Testing\RefreshDatabase;
+
     /**
      * Checks if home page exists
      * @test
@@ -61,39 +50,4 @@ class GetPages extends \Tests\TestCase
         $this->get("/add")
              ->assertStatus(200);
     }
-
-    /**
-     * Checks if a file page exists
-     * @test
-     * @return void
-     */
-    public function fileViewExists() : void
-    {        
-        $this->get("/".$this->fileView->name())
-             ->assertStatus(200);
-    }
-
-    /**
-     * Checks if a file edit page exists
-     * @test
-     * @return void
-     */
-    public function editExists() : void
-    {        
-        $this->get("/edit/".$this->fileView->name())
-             ->assertStatus(200);
-    }
-
-    /**
-     * Checks if tags page exist
-     * @test
-     * @return void
-     */
-    public function tagsExists() : void
-    {        
-        $this->get("/tag/".$this->fileView->tagsString())
-             ->assertStatus(200);
-    }
-    
-    private $fileView;
 }
