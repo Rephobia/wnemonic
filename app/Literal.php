@@ -46,4 +46,9 @@ class Literal
     {
         return "file";
     }
+    
+    public static function passField() : string
+    {
+        return "pass";
+    }
 }
