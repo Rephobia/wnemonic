@@ -19,6 +19,11 @@
 		<input type="text" name={{ \App\Literal::tagField() }} value={{ $file->tagsString() }}>
 	    </div>
 	    
+	    <div class="named-input">
+		<label>Pass:</label>
+		<input type="password" name={{ \App\Literal::passField() }}>
+	    </div>
+	    
 	    <div class="control">
 		<button type="reset">Reset</button>
 		<button type="submit" formaction="/edit">Save</button>
