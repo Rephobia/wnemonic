@@ -24,8 +24,9 @@
 
 namespace App;
 
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Model;
+use \Illuminate\Contracts\Filesystem\Filesystem;
+
 use App\Literal;
 use App\Utils\FileInfo;
 use App\Utils\TagMaker;
@@ -54,17 +55,22 @@ class Tags extends Model
 
 class Repository
 {
+    public function __construct(Filesystem $filesystem)
+    {
+        $this->filesystem = $filesystem;
+    }
+    
     public function get(string $fileName) : ?FileView
     {
-        $data = self::getData($fileName);
+        $data = $this->getData($fileName);
                 
-        return empty($data) ? NULL : new FileView ($data);
+        return empty($data) ? NULL : new FileView ($data, $this->filesystem);
     }
 
     public function files($page) : FileViewIterator
     {
         $paginator = File::paginate(self::pageCap, array("*"), "page", $page);
-        return new FileViewIterator ($paginator);                       
+        return new FileViewIterator ($paginator, $this->filesystem);
     }
 
     public function filesByTags(string $tagsString, $page) : FileViewIterator
@@ -75,9 +81,8 @@ class Repository
             $query->whereIn("tag", $tags);
         })->paginate(self::pageCap, array("*"), "page", $page);
                     
-        return new FileViewIterator ($paginator);
+        return new FileViewIterator ($paginator, $this->filesystem);
     }
-
 
     public function save($file, string $tagsString) : FileView
     {
@@ -88,7 +93,7 @@ class Repository
         $data->save();
         
         $path = FileInfo::hashPath($fileName);
-        Storage::putFileAs(".", $file, $path);
+        $this->filesystem->putFileAs(".", $file, $path);
         
         $tags = TagMaker::toArray($tagsString);
 
@@ -97,15 +102,16 @@ class Repository
             $data->tags()->attach($tag->id);
         }
 
-        return new FileView ($data);
+        return new FileView ($data, $this->filesystem);
     }
 
     public function delete(string $fileName)
     {
-        $data = self::getData($fileName);
+        $data = $this->getData($fileName);
         
         $path = FileInfo::hashPath($data->name);
-        Storage::delete($path);
+        
+        $this->filesystem->delete($path);
         $data->delete();
     }
     
@@ -124,7 +130,8 @@ class Repository
         
         $oldpath = FileInfo::hashPath($fileName);
         $newpath = FileInfo::hashPath($newName);
-        Storage::move($oldpath, $newpath);
+        
+        $this->filesystem->move($oldpath, $newpath);
 
     }
 
@@ -142,8 +149,6 @@ class Repository
         $data->tags()->sync($tagsId);
     }
 
-    
-    
     private function getData(string $fileName) : ?File
     {
         $data = File::where(Literal::nameField(), "=", $fileName)->first();
@@ -151,5 +156,7 @@ class Repository
         return $data;
     }
 
-    const pageCap = 13;
+    private const pageCap = 13;
+
+    private $filesystem;
 }
