@@ -19,27 +19,27 @@
 
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
+ */
 
 
-namespace App\Http\Requests;
+namespace Tests\Feature\Request;
 
-use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Validator;
 
-class BasicRequest extends FormRequest
+
+trait ValidateField
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
+    public function validateField(string $field, $value, $request) : bool
     {
-        return true;
-    }
+        $data = array($field => $value);
+        $rules = array($field=> $request->rules()[$field]);
 
-    public function setRedirect(string $redirect)
-    {
-        $this->redirect = $redirect;
+        $validator = Validator::make($data, $rules);
+
+        return $validator->passes();
     }
 }
+
+
+
+

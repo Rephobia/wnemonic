@@ -19,27 +19,35 @@
 
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
+ */
 
 
-namespace App\Http\Requests;
+namespace Tests\Feature;
 
-use Illuminate\Foundation\Http\FormRequest;
 
-class BasicRequest extends FormRequest
+class GetPages extends \Tests\TestCase
 {
+    use \Illuminate\Foundation\Testing\RefreshDatabase;
+
     /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
+     * Checks if home page exists
+     * @test
+     * @return void
      */
-    public function authorize()
+    public function homeExists() : void
     {
-        return true;
+        $this->get("/")
+             ->assertStatus(200);
     }
 
-    public function setRedirect(string $redirect)
+    /**
+     * Checks if add page exists
+     * @test
+     * @return void
+     */
+    public function addExists() : void
     {
-        $this->redirect = $redirect;
+        $this->get("/add")
+             ->assertStatus(200);
     }
 }
