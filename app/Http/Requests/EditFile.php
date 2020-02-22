@@ -21,15 +21,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+
 namespace App\Http\Requests;
 
 use App\Literal;
 use App\Rules\FileRule;
 use App\Http\Requests\BasicRequest;
 
+
 class EditFile extends BasicRequest
 {
-
     /**
      * Get the validation rules that apply to the request.
      *

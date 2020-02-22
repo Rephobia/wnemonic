@@ -73,7 +73,7 @@ class EditController extends Controller
     
     public function add(NewFile $request)
     {
-        $file = $request->file(Literal::nameField());
+        $file = $request->file("file");
         $tags = $request->input(Literal::tagField());
 
         $fileView = $this->repository->save($file, $tags);

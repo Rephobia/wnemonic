@@ -26,15 +26,17 @@ namespace App;
 
 class FileViewIterator implements \Iterator
 {
-    public function __construct($paginator)
+    public function __construct($paginator, $filesystem)
     {
         $this->paginator = $paginator;
         $this->position = 0;
-        $this->return  = $this->createLinks();
+        $this->pages = $this->createLinks();
+        
+        $this->filesystem = $filesystem;
     }
     public function pages() : string
     {
-        return $this->return ;
+        return $this->pages;
     }
     
     public function rewind()
@@ -44,7 +46,7 @@ class FileViewIterator implements \Iterator
 
     public function current()
     {
-        return new FileView ($this->paginator[$this->position]);
+        return new FileView ($this->paginator[$this->position], $this->filesystem);
     }
     
     public function key()
@@ -78,5 +80,7 @@ class FileViewIterator implements \Iterator
     
     private $paginator;
     private int $position = 0;
-    private string $links;
+    private string $pages;
+
+    private $filesystem;
 }
