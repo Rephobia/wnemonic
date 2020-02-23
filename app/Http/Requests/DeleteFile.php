@@ -22,38 +22,26 @@
 */
 
 
-namespace App;
+namespace App\Http\Requests;
+
+use App\Literal;
+use App\Rules\FileRule;
+use App\Http\Requests\BasicRequest;
 
 
-class Literal
+class DeleteFile extends BasicRequest
 {
-    public static function nameField() : string
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    public function rules() : array
     {
-        return "name";
-    }
-    
-    public static function newnameField() : string
-    {
-        return "newname";
-    }
-    
-    public static function tagsField() : string
-    {
-        return "tag";
-    }
-    
-    public static function fileField() : string
-    {
-        return "file";
-    }
-    
-    public static function passField() : string
-    {
-        return "pass";
-    }
-
-    public static function contentPassword() : string
-    {
-        return env("CONTENT_PASSWORD");
+        $nameRules = (new FileRule($this))->required()->exists();
+        $passRules = (new FileRule($this))->checkPass();
+        
+        return array(Literal::nameField() => $nameRules,
+                     Literal::passField() => $passRules);
     }
 }

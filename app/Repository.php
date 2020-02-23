@@ -98,7 +98,7 @@ class Repository
         $tags = TagMaker::toArray($tagsString);
 
         foreach ($tags as $rawTag) {
-            $tag = Tags::firstOrCreate([Literal::tagField() => $rawTag]);
+            $tag = Tags::firstOrCreate([Literal::tagsField() => $rawTag]);
             $data->tags()->attach($tag->id);
         }
 
@@ -142,7 +142,7 @@ class Repository
         
         $tagsId = array();
         foreach ($tags as $rawTag) {
-            $tag = Tags::firstOrCreate([Literal::tagField() => $rawTag]);
+            $tag = Tags::firstOrCreate([Literal::tagsField() => $rawTag]);
             array_push($tagsId, $tag->id);
         }
         

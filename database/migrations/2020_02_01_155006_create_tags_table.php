@@ -18,7 +18,7 @@ class CreateTagsTable extends Migration
         {
             $table->bigIncrements('id');
             $table->timestamps();
-            $table->string(Literal::tagField())->unique();
+            $table->string(Literal::tagsField())->unique();
         });
 
         Schema::create('file_tags', function (Blueprint $table)

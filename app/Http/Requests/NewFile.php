@@ -40,9 +40,11 @@ class NewFile extends BasicRequest
     {
         $nameRules = (new FileRule($this))->required()->isFile()->unique();
         $tagRules = (new FileRule($this))->required();
+        $passRules = (new FileRule($this))->checkPass();
 
-        return array("file" => $nameRules,
-                     Literal::tagField() => $tagRules);
+        return array(Literal::fileField() => $nameRules,
+                     Literal::tagsField() => $tagRules,
+                     Literal::passField() => $passRules);
     }
   
 }
