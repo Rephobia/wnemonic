@@ -32,6 +32,8 @@ use App\Rules\Units\EqualField;
 use App\Rules\Units\IsFile;
 use App\Rules\Units\Unique;
 use App\Rules\Units\Exists;
+use App\Rules\Units\CheckPass;
+
 
 
 class FileRule implements ImplicitRule
@@ -101,6 +103,11 @@ class FileRule implements ImplicitRule
     public function isFile()
     {
         return $this->appendRule(new IsFile);
+    }
+    
+    public function checkPass()
+    {
+        return $this->appendRule(new CheckPass);
     }
     
     protected function appendRule(BasicRule $rule)

@@ -61,7 +61,7 @@ class EditFile extends \Tests\TestCase
         $response = $this->post("/edit",
                                 array(Literal::nameField() => $this->fakeFile->name(),
                                       Literal::newnameField() => $newName,
-                                      Literal::tagField() => $newTags));
+                                      Literal::tagsField() => $newTags));
         
         $response->assertRedirect($newName);
     }
@@ -81,7 +81,7 @@ class EditFile extends \Tests\TestCase
         $this->post("/edit",
                     array(Literal::nameField() => $this->fakeFile->name(),
                           Literal::newnameField() => $newName,
-                          Literal::tagField() => $newTags));
+                          Literal::tagsField() => $newTags));
         
         $this->assertFile($newName, $newTags);
     }
@@ -101,7 +101,7 @@ class EditFile extends \Tests\TestCase
         $this->post("/edit",
                     array(Literal::nameField() => $this->fakeFile->name(),
                           Literal::newnameField() => $newName,
-                          Literal::tagField() => $newTags));
+                          Literal::tagsField() => $newTags));
         
         $this->assertFile($newName, $newTags);
     }
@@ -121,7 +121,7 @@ class EditFile extends \Tests\TestCase
         $this->post("/edit",
                     array(Literal::nameField() => $newName,
                           Literal::newnameField() => $newName,
-                          Literal::tagField() => $newTags));
+                          Literal::tagsField() => $newTags));
         
         $this->assertFile($newName, $newTags);
     }
@@ -141,7 +141,7 @@ class EditFile extends \Tests\TestCase
         $this->post("/edit",
                     array(Literal::nameField() => $newName,
                           Literal::newnameField() => $newName,
-                          Literal::tagField() => $newTags));
+                          Literal::tagsField() => $newTags));
         
         $this->assertFile($newName, $newTags);
     }
@@ -187,7 +187,7 @@ class EditFile extends \Tests\TestCase
     {
         $request = new \App\Http\Requests\EditFile;
         
-        $result = $this->validateField(Literal::tagField(),
+        $result = $this->validateField(Literal::tagsField(),
                                        NULL,
                                        $request);
         
