@@ -81,7 +81,7 @@ class DeleteFile extends \Tests\TestCase
      */
     public function fileNotExists() : void
     {
-        $request = new \App\Http\Requests\CheckFile;
+        $request = new \App\Http\Requests\DeleteFile;
         
         $result = $this->validateField(Literal::nameField(),
                                        $this->fakeFile->name(),

@@ -27,7 +27,7 @@ use Illuminate\Http\Request;
 
 use App\Repository;
 use App\Literal;
-use App\Http\Requests\CheckFile;
+use App\Http\Requests\DeleteFile;
 use App\Http\Requests\EditFile;
 use App\Http\Requests\NewFile;
 
@@ -62,7 +62,7 @@ class EditController extends Controller
     {
         $fileName = $request->input(Literal::nameField());
         $newName = $request->input(Literal::newnameField());
-        $tagsString = $request->input(Literal::tagField());
+        $tagsString = $request->input(Literal::tagsField());
         
         $file = $this->repository->get($fileName);
         $this->repository->rename($file, $newName);
@@ -74,14 +74,14 @@ class EditController extends Controller
     public function add(NewFile $request)
     {
         $file = $request->file("file");
-        $tags = $request->input(Literal::tagField());
+        $tags = $request->input(Literal::tagsField());
 
         $fileView = $this->repository->save($file, $tags);
         
         return redirect("/".$fileView->name());
     }
     
-    public function delete(CheckFile $request)
+    public function delete(DeleteFile $request)
     {
         $fileName = $request->input(Literal::nameField());
         $this->repository->delete($fileName);

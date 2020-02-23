@@ -54,7 +54,7 @@ class AddFile extends \Tests\TestCase
     {
         $response = $this->post("/add",
                                 array(Literal::fileField() => $this->fakeFile->file(),
-                                      Literal::tagField() => $this->fakeFile->tags()));
+                                      Literal::tagsField() => $this->fakeFile->tags()));
    
         $response->assertRedirect($this->fakeFile->name());
     }
@@ -68,7 +68,7 @@ class AddFile extends \Tests\TestCase
     {
         $this->post("/add",
                     array(Literal::fileField() => $this->fakeFile->file(),
-                          Literal::tagField() => $this->fakeFile->tags()));
+                          Literal::tagsField() => $this->fakeFile->tags()));
    
         \Storage::assertExists(FileInfo::hashPath($this->fakeFile->name()));
     }
@@ -98,7 +98,7 @@ class AddFile extends \Tests\TestCase
     {
         $request = new \App\Http\Requests\NewFile;
         
-        $result = $this->validateField(Literal::tagField(),
+        $result = $this->validateField(Literal::tagsField(),
                                        NULL,
                                        $request);
         

@@ -7,12 +7,12 @@
 	<form  method="post" enctype="multipart/form-data">
 	    @csrf
 	    <div class="upload">
-		<input type="file" name="file">
+		<input type="file" name={{ \App\Literal::fileField()}}>
 	    </div>
 
 	    <div class="named-input">
 		<label>Tags:</label>
-		<input type="text" name={{ \App\Literal::tagField() }}>
+		<input type="text" name={{ \App\Literal::tagsField() }}>
 	    </div>
 	    
 	    <div class="named-input">
