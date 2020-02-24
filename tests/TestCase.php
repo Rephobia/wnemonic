@@ -14,5 +14,12 @@ abstract class TestCase extends BaseTestCase
         \Artisan::call('migrate');
         \Storage::fake("local");
         \Storage::fake("public");
+
+        $hashed = (new \App\Console\Commands\Password)->hash(self::TEST_PASSWORD);
+
+        $_ENV[\App\Literal::passwordKey()] = $hashed;
+
     }
+
+    protected const TEST_PASSWORD = "testPass";
 }
