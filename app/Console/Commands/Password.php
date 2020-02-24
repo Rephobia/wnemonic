@@ -4,7 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 
-class password extends Command
+class Password extends Command
 {
     /**
      * The name and signature of the console command.
@@ -29,7 +29,17 @@ class password extends Command
     {
         parent::__construct();
     }
-
+    
+    /**
+     * hash string
+     *
+     * @return string
+     */
+    public function hash(string $password) : string
+    {
+        return password_hash($password, PASSWORD_DEFAULT);
+    }
+    
     /**
      * Execute the console command.
      *
@@ -38,32 +48,34 @@ class password extends Command
     public function handle()
     {
         $password = $this->secret("Set content password");
-        $hashed = password_hash($password, PASSWORD_DEFAULT);
+        $hashed = $this->hash($password);
 
         $this->setEnvValue($hashed);
     }
     
     private function setEnvValue(?string $newValue)
     {
+        $passKey = \App\Literal::passwordKey();
+        
         $path = base_path(".env");
         
         if (file_exists($path)) {
 
             $content = file_get_contents($path);
                         
-            $newPair = "{$this->passKey}=$newValue";
+            $newPair = "{$passKey}=$newValue";
 
             // strpos can return 0 as position or false, if substr doesn't exist,
             // use === to check result
-            if (strpos($content, $this->passKey) === false) {
+            if (strpos($content, $passKey) === false) {
                 
                 $content = "{$content}\n{$newPair}";
 
             }
             else {
                 
-                $oldValue = env($this->passKey);
-                $oldPair = "{$this->passKey}=$oldValue";
+                $oldValue = env($passKey);
+                $oldPair = "{$passKey}=$oldValue";
                 $content = str_replace($oldPair, $newPair, $content);
                 
             }
@@ -76,6 +88,4 @@ class password extends Command
             
         }
     }
-    
-    private string $passKey = "CONTENT_PASSWORD";
 }

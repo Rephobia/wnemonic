@@ -28,7 +28,7 @@ class CheckPass extends BasicRule
 {
     public function fails($attribute, $value)
     {
-        $pass = \App\Literal::contentPassword();
+        $pass = env(\App\Literal::passwordKey());
         
         return !password_verify($value, $pass);
     }

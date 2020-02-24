@@ -69,7 +69,8 @@ class DeleteFile extends \Tests\TestCase
         Seeder::seedFile($this->fakeFile);
 
         $this->post("/delete",
-                    array(Literal::nameField() => $this->fakeFile->name()));
+                    array(Literal::nameField() => $this->fakeFile->name(),
+                          Literal::passField() => self::TEST_PASSWORD));
 
         \Storage::assertMissing(FileInfo::hashPath($this->fakeFile->name()));
     }
