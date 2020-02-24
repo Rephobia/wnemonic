@@ -52,8 +52,8 @@ class Literal
         return "pass";
     }
 
-    public static function contentPassword() : string
+    public static function passwordKey() : string
     {
-        return env("CONTENT_PASSWORD");
+        return "CONTENT_PASSWORD";
     }
 }

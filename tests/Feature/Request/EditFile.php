@@ -61,7 +61,8 @@ class EditFile extends \Tests\TestCase
         $response = $this->post("/edit",
                                 array(Literal::nameField() => $this->fakeFile->name(),
                                       Literal::newnameField() => $newName,
-                                      Literal::tagsField() => $newTags));
+                                      Literal::tagsField() => $newTags,
+                                      Literal::passField() => self::TEST_PASSWORD));
         
         $response->assertRedirect($newName);
     }
@@ -81,7 +82,8 @@ class EditFile extends \Tests\TestCase
         $this->post("/edit",
                     array(Literal::nameField() => $this->fakeFile->name(),
                           Literal::newnameField() => $newName,
-                          Literal::tagsField() => $newTags));
+                          Literal::tagsField() => $newTags,
+                          Literal::passField() => self::TEST_PASSWORD));
         
         $this->assertFile($newName, $newTags);
     }
@@ -101,7 +103,8 @@ class EditFile extends \Tests\TestCase
         $this->post("/edit",
                     array(Literal::nameField() => $this->fakeFile->name(),
                           Literal::newnameField() => $newName,
-                          Literal::tagsField() => $newTags));
+                          Literal::tagsField() => $newTags,
+                          Literal::passField() => self::TEST_PASSWORD));
         
         $this->assertFile($newName, $newTags);
     }
@@ -121,7 +124,8 @@ class EditFile extends \Tests\TestCase
         $this->post("/edit",
                     array(Literal::nameField() => $newName,
                           Literal::newnameField() => $newName,
-                          Literal::tagsField() => $newTags));
+                          Literal::tagsField() => $newTags,
+                          Literal::passField() => self::TEST_PASSWORD));
         
         $this->assertFile($newName, $newTags);
     }

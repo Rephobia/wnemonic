@@ -24,28 +24,17 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Http\UploadedFile;
-
 class Seeder
 {    
     /**
      * Seed a file in the testing environment
      * @return \App\FileView
      */
-    public static function seed(string $fileName, string $tags,
-                                $kilobytes = 1024) : \App\FileView
-    {        
-        $file = UploadedFile::fake()->create($fileName, $kilobytes);
-                
-        $repository = \App::make(\App\Repository::class);
-        
-        return $repository->save($file, $tags);
-    }
-    
     public static function seedFile(FakeFile $fakeFile) : \App\FileView
     {                        
         $repository = \App::make(\App\Repository::class);
         
         return $repository->save($fakeFile->file(), $fakeFile->tags());
     }
+    
 }
