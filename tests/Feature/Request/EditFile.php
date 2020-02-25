@@ -61,7 +61,8 @@ class EditFile extends \Tests\TestCase
         $response = $this->post("/edit",
                                 array(Literal::nameField() => $this->fakeFile->name(),
                                       Literal::newnameField() => $newName,
-                                      Literal::tagField() => $newTags));
+                                      Literal::tagsField() => $newTags,
+                                      Literal::passField() => self::TEST_PASSWORD));
         
         $response->assertRedirect($newName);
     }
@@ -81,7 +82,8 @@ class EditFile extends \Tests\TestCase
         $this->post("/edit",
                     array(Literal::nameField() => $this->fakeFile->name(),
                           Literal::newnameField() => $newName,
-                          Literal::tagField() => $newTags));
+                          Literal::tagsField() => $newTags,
+                          Literal::passField() => self::TEST_PASSWORD));
         
         $this->assertFile($newName, $newTags);
     }
@@ -101,7 +103,8 @@ class EditFile extends \Tests\TestCase
         $this->post("/edit",
                     array(Literal::nameField() => $this->fakeFile->name(),
                           Literal::newnameField() => $newName,
-                          Literal::tagField() => $newTags));
+                          Literal::tagsField() => $newTags,
+                          Literal::passField() => self::TEST_PASSWORD));
         
         $this->assertFile($newName, $newTags);
     }
@@ -121,7 +124,8 @@ class EditFile extends \Tests\TestCase
         $this->post("/edit",
                     array(Literal::nameField() => $newName,
                           Literal::newnameField() => $newName,
-                          Literal::tagField() => $newTags));
+                          Literal::tagsField() => $newTags,
+                          Literal::passField() => self::TEST_PASSWORD));
         
         $this->assertFile($newName, $newTags);
     }
@@ -141,7 +145,7 @@ class EditFile extends \Tests\TestCase
         $this->post("/edit",
                     array(Literal::nameField() => $newName,
                           Literal::newnameField() => $newName,
-                          Literal::tagField() => $newTags));
+                          Literal::tagsField() => $newTags));
         
         $this->assertFile($newName, $newTags);
     }
@@ -187,7 +191,7 @@ class EditFile extends \Tests\TestCase
     {
         $request = new \App\Http\Requests\EditFile;
         
-        $result = $this->validateField(Literal::tagField(),
+        $result = $this->validateField(Literal::tagsField(),
                                        NULL,
                                        $request);
         
@@ -242,6 +246,22 @@ class EditFile extends \Tests\TestCase
         
         $result = $this->validateField(Literal::newnameField(),
                                        $this->fakeFile->name(),
+                                       $request);
+        
+        $this->assertFalse($result);
+    }
+    
+    /**
+     * Checks if edit request contains a wrong password
+     * @test
+     * @return void
+     */
+    public function wrongPassword() : void
+    {
+        $request = new \App\Http\Requests\EditFile;
+        
+        $result = $this->validateField(Literal::passField(),
+                                       self::TEST_PASSWORD."wrong",
                                        $request);
         
         $this->assertFalse($result);

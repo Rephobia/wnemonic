@@ -37,7 +37,7 @@ class Literal
         return "newname";
     }
     
-    public static function tagField() : string
+    public static function tagsField() : string
     {
         return "tag";
     }
@@ -45,5 +45,15 @@ class Literal
     public static function fileField() : string
     {
         return "file";
+    }
+    
+    public static function passField() : string
+    {
+        return "pass";
+    }
+
+    public static function passwordKey() : string
+    {
+        return "CONTENT_PASSWORD";
     }
 }

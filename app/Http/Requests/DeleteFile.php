@@ -29,7 +29,7 @@ use App\Rules\FileRule;
 use App\Http\Requests\BasicRequest;
 
 
-class EditFile extends BasicRequest
+class DeleteFile extends BasicRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -39,25 +39,9 @@ class EditFile extends BasicRequest
     public function rules() : array
     {
         $nameRules = (new FileRule($this))->required()->exists();
-        
-        $newnameRules = (new FileRule($this))->required()->unique(Literal::nameField());
-        
-        $tagsRules = (new FileRule($this))->required();
-        
         $passRules = (new FileRule($this))->checkPass();
         
-        $rules = array(Literal::nameField() => $nameRules,
-                       Literal::newnameField() => $newnameRules,
-                       Literal::tagsField() => $tagsRules,
-                       Literal::passField() => $passRules);
-        
-        return $rules;
+        return array(Literal::nameField() => $nameRules,
+                     Literal::passField() => $passRules);
     }
-    
-    public function attributes() : array
-    {
-        return [
-            Literal::newnameField() => "new name"
-        ];
-    }    
 }

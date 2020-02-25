@@ -22,22 +22,25 @@
 */
 
 
-namespace App\Http\Requests;
+namespace App\Rules\Units;
 
-use App\Literal;
-use App\Rules\FileRule;
-use App\Http\Requests\BasicRequest;
-
-
-class CheckFile extends BasicRequest
+class CheckPass extends BasicRule
 {
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
-    public function rules() : array
+    public function fails($attribute, $value)
     {
-        return array(Literal::nameField() => (new FileRule($this))->required()->exists());
-    }    
+        $pass = env(\App\Literal::passwordKey());
+        
+        return !password_verify($value, $pass);
+    }
+
+    /**
+     * Get the validation error message.
+     *
+     * @return string
+     */
+    public function message()
+    {
+        return "password is wrong";
+    }
+
 }

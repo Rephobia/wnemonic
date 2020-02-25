@@ -54,8 +54,9 @@ class AddFile extends \Tests\TestCase
     {
         $response = $this->post("/add",
                                 array(Literal::fileField() => $this->fakeFile->file(),
-                                      Literal::tagField() => $this->fakeFile->tags()));
-   
+                                      Literal::tagsField() => $this->fakeFile->tags(),
+                                      Literal::passField() => self::TEST_PASSWORD));
+        
         $response->assertRedirect($this->fakeFile->name());
     }
     
@@ -68,7 +69,8 @@ class AddFile extends \Tests\TestCase
     {
         $this->post("/add",
                     array(Literal::fileField() => $this->fakeFile->file(),
-                          Literal::tagField() => $this->fakeFile->tags()));
+                          Literal::tagsField() => $this->fakeFile->tags(),
+                          Literal::passField() => self::TEST_PASSWORD));
    
         \Storage::assertExists(FileInfo::hashPath($this->fakeFile->name()));
     }
@@ -98,7 +100,7 @@ class AddFile extends \Tests\TestCase
     {
         $request = new \App\Http\Requests\NewFile;
         
-        $result = $this->validateField(Literal::tagField(),
+        $result = $this->validateField(Literal::tagsField(),
                                        NULL,
                                        $request);
         
@@ -114,12 +116,28 @@ class AddFile extends \Tests\TestCase
     {
         $request = new \App\Http\Requests\NewFile;
         
-        Seeder::seed($this->fakeFile->name(), $this->fakeFile->tags());
-        
+        Seeder::seedFile($this->fakeFile);
+
         $request->files->set(Literal::fileField(), $this->fakeFile->file());
         
         $result = $this->validateField(Literal::fileField(),
                                        $this->fakeFile->file(),
+                                       $request);
+        
+        $this->assertFalse($result);
+    }
+
+    /**
+     * Checks if add request contains a wrong password
+     * @test
+     * @return void
+     */
+    public function wrongPassword() : void
+    {
+        $request = new \App\Http\Requests\NewFile;
+        
+        $result = $this->validateField(Literal::passField(),
+                                       self::TEST_PASSWORD."wrong",
                                        $request);
         
         $this->assertFalse($result);
