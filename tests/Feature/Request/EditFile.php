@@ -251,6 +251,22 @@ class EditFile extends \Tests\TestCase
         $this->assertFalse($result);
     }
     
+    /**
+     * Checks if edit request contains a wrong password
+     * @test
+     * @return void
+     */
+    public function wrongPassword() : void
+    {
+        $request = new \App\Http\Requests\EditFile;
+        
+        $result = $this->validateField(Literal::passField(),
+                                       self::TEST_PASSWORD."wrong",
+                                       $request);
+        
+        $this->assertFalse($result);
+    }
+    
     private function assertFile($fileName, $tags)
     {
         $repository = \App::make(\App\Repository::class);

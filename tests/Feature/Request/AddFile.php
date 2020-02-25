@@ -126,4 +126,20 @@ class AddFile extends \Tests\TestCase
         
         $this->assertFalse($result);
     }
+
+    /**
+     * Checks if add request contains a wrong password
+     * @test
+     * @return void
+     */
+    public function wrongPassword() : void
+    {
+        $request = new \App\Http\Requests\NewFile;
+        
+        $result = $this->validateField(Literal::passField(),
+                                       self::TEST_PASSWORD."wrong",
+                                       $request);
+        
+        $this->assertFalse($result);
+    }
 }
