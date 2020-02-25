@@ -69,7 +69,8 @@ class DeleteFile extends \Tests\TestCase
         Seeder::seedFile($this->fakeFile);
 
         $this->post("/delete",
-                    array(Literal::nameField() => $this->fakeFile->name()));
+                    array(Literal::nameField() => $this->fakeFile->name(),
+                          Literal::passField() => self::TEST_PASSWORD));
 
         \Storage::assertMissing(FileInfo::hashPath($this->fakeFile->name()));
     }
@@ -81,10 +82,26 @@ class DeleteFile extends \Tests\TestCase
      */
     public function fileNotExists() : void
     {
-        $request = new \App\Http\Requests\CheckFile;
+        $request = new \App\Http\Requests\DeleteFile;
         
         $result = $this->validateField(Literal::nameField(),
                                        $this->fakeFile->name(),
+                                       $request);
+        
+        $this->assertFalse($result);
+    }
+    
+    /**
+     * Checks if delete request contains a wrong password
+     * @test
+     * @return void
+     */
+    public function wrongPassword() : void
+    {
+        $request = new \App\Http\Requests\DeleteFile;
+        
+        $result = $this->validateField(Literal::passField(),
+                                       self::TEST_PASSWORD."wrong",
                                        $request);
         
         $this->assertFalse($result);

@@ -16,7 +16,12 @@
 	    
 	    <div class="named-input">
 		<label>Tags:</label>
-		<input type="text" name={{ \App\Literal::tagField() }} value={{ $file->tagsString() }}>
+		<input type="text" name={{ \App\Literal::tagsField() }} value={{ $file->tagsString() }}>
+	    </div>
+	    
+	    <div class="named-input">
+		<label>Pass:</label>
+		<input type="password" name={{ \App\Literal::passField() }}>
 	    </div>
 	    
 	    <div class="control">
