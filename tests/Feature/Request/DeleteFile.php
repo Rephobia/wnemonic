@@ -90,4 +90,20 @@ class DeleteFile extends \Tests\TestCase
         
         $this->assertFalse($result);
     }
+    
+    /**
+     * Checks if delete request contains a wrong password
+     * @test
+     * @return void
+     */
+    public function wrongPassword() : void
+    {
+        $request = new \App\Http\Requests\DeleteFile;
+        
+        $result = $this->validateField(Literal::passField(),
+                                       self::TEST_PASSWORD."wrong",
+                                       $request);
+        
+        $this->assertFalse($result);
+    }
 }
