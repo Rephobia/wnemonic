@@ -5,7 +5,7 @@
 
  * Copyright (C) 2020 Roman Erdyakov
 
- * This file is part of Wnemonic. It is a tag based file manager.
+ * This file is part of Wnemonic. It is a tags based file manager.
 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -62,9 +62,9 @@ class Repository
     
     public function get(string $fileName) : ?FileView
     {
-        $data = $this->getData($fileName);
+        $file = $this->getFile($fileName);
                 
-        return empty($data) ? NULL : new FileView ($data, $this->filesystem);
+        return empty($file) ? NULL : new FileView ($file, $this->filesystem);
     }
 
     public function files($page) : FileViewIterator
@@ -73,87 +73,98 @@ class Repository
         return new FileViewIterator ($paginator, $this->filesystem);
     }
 
-    public function filesByTags(string $tagsString, $page) : FileViewIterator
+    public function search(string $searchStr, $page) : FileViewIterator
     {
-        $tags = TagMaker::toArray($tagsString);
+        $searchArr = TagMaker::toArray($searchStr);
 
-        $paginator = File::whereHas("tags", function($query) use ($tags) {
-            $query->whereIn("tag", $tags);
-        })->paginate(self::pageCap, array("*"), "page", $page);
-                    
+        $query = File::query();
+
+        $query->whereHas("tags", function($query) use ($searchArr)
+        {
+            $query->whereIn(Literal::tagsField(), $searchArr);
+            
+        }, "=", count($searchArr));
+        
+        $paginator = $query->paginate(self::pageCap, array("*"), "page", $page);
+        
         return new FileViewIterator ($paginator, $this->filesystem);
     }
 
-    public function save($file, string $tagsString) : FileView
+    public function save($uploadedFile, string $newTags) : FileView
     {
-        $fileName = $file->getClientOriginalName();
+        $fileName = $uploadedFile->getClientOriginalName();
         
-        $data = new File;
-        $data->name = $fileName;
-        $data->save();
+        $file = new File;
+        $file->name = $fileName;
+        $file->save();
         
         $path = FileInfo::hashPath($fileName);
-        $this->filesystem->putFileAs(".", $file, $path);
+        $this->filesystem->putFileAs(".", $uploadedFile, $path);
         
-        $tags = TagMaker::toArray($tagsString);
-
+        $tags = TagMaker::toArray($newTags, $fileName);
+        
         foreach ($tags as $rawTag) {
             $tag = Tags::firstOrCreate([Literal::tagsField() => $rawTag]);
-            $data->tags()->attach($tag->id);
+            $file->tags()->attach($tag->id);
         }
 
-        return new FileView ($data, $this->filesystem);
+        return new FileView ($file, $this->filesystem);
     }
 
     public function delete(string $fileName)
     {
-        $data = $this->getData($fileName);
+        $file = $this->getFile($fileName);
         
-        $path = FileInfo::hashPath($data->name);
+        $path = FileInfo::hashPath($file->name);
         
         $this->filesystem->delete($path);
-        $data->delete();
+        $file->delete();
     }
     
-    public function rename(FileView $fileView, string $newName) : void
+    public function update(FileView $fileView, string $newName,
+                           string $newTags) : void
     {
-        $data = $fileView->data;
+        $file = $fileView->file;
         
-        $fileName = $data->name;
+        $this->updateName($file, $newName);
+        $this->updateTags($file, $newTags);
+    }
+    
+    private function updateName(File $file, string $newName) : void
+    {
+        $fileName = $file->name;
         
-        if ($fileName === $newName) {
-            return;
+        if ($fileName !== $newName) {
+            
+            $file->name = $newName;
+            $file->save();
+        
+            $oldpath = FileInfo::hashPath($fileName);
+            $newpath = FileInfo::hashPath($newName);
+        
+            $this->filesystem->move($oldpath, $newpath);
+            
         }
-        
-        $data->name = $newName;
-        $data->save();
-        
-        $oldpath = FileInfo::hashPath($fileName);
-        $newpath = FileInfo::hashPath($newName);
-        
-        $this->filesystem->move($oldpath, $newpath);
-
     }
 
-    public function updateTags(FileView $fileView, string $tagsString) : void
+    private function updateTags(File $file, string $newTags) : void
     {
-        $data = $fileView->data;
-        $tags = TagMaker::toArray($tagsString);
-        
+        $tags = TagMaker::toArray($newTags, $file->name);
+
         $tagsId = array();
         foreach ($tags as $rawTag) {
             $tag = Tags::firstOrCreate([Literal::tagsField() => $rawTag]);
             array_push($tagsId, $tag->id);
         }
         
-        $data->tags()->sync($tagsId);
+        $file->tags()->sync($tagsId);
     }
 
-    private function getData(string $fileName) : ?File
+    private function getFile(string $fileName) : ?File
     {
-        $data = File::where(Literal::nameField(), "=", $fileName)->first();
+        $file = File::where(Literal::nameField(), "=", $fileName)->first();
 
-        return $data;
+        return $file;
     }
 
     private const pageCap = 13;
