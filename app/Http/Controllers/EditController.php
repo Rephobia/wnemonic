@@ -62,11 +62,10 @@ class EditController extends Controller
     {
         $fileName = $request->input(Literal::nameField());
         $newName = $request->input(Literal::newnameField());
-        $tagsString = $request->input(Literal::tagsField());
+        $newTags = $request->input(Literal::tagsField());
         
         $file = $this->repository->get($fileName);
-        $this->repository->rename($file, $newName);
-        $this->repository->updateTags($file, $tagsString);
+        $this->repository->update($file, $newName, $newTags);
         
         return redirect("/".$newName);
     }

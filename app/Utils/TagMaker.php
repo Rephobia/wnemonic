@@ -31,16 +31,26 @@ class TagMaker
     private const spaceReplace = "_";
 
 
-    public static function toArray(string $tagsString) : array
+    public static function toArray(string $tags, string ...$extraTags) : array
     {
-        $callback = function (string $rawTag) : string
-                  {
-                      $trimmedTag = trim($rawTag);
+        $delimeted = explode(self::delimeter, $tags);
+
+        $callback = array(__CLASS__, "reducer");
         
-                      return str_replace(" ", self::spaceReplace, $trimmedTag);
-                  };
+        $tagsArr = array_map($callback, $delimeted);
+
+        foreach ($extraTags as $tag) {
+            array_push($tagsArr, self::reducer($tag));
+        }
         
-        return array_map($callback, explode(self::delimeter, $tagsString));
+        return $tagsArr;
+    }
+
+    private static function reducer(string $tag) : string
+    {
+        $trimmerTag = trim($tag);
+        
+        return str_replace(" ", self::spaceReplace, $trimmerTag);        
     }
 }
 
