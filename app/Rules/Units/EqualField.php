@@ -34,7 +34,10 @@ class EqualField extends BasicRule
 
     public function fails($attribute, $value, $request)
     {
-        return $value === $request->input($this->equalField);
+        $result = $value === $request->input($this->equalField)
+                || $value  === $request->file($this->equalField)->getClientOriginalName();
+        
+        return $result;
     }
 
     /**
@@ -44,7 +47,7 @@ class EqualField extends BasicRule
      */
     public function message()
     {
-        return ":attribute is equal old {$this->equalField}";
+        return ":attribute is equal the {$this->equalField}";
     }
     
     private $equalField;

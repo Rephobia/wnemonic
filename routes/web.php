@@ -21,8 +21,9 @@ Route::get("/add",                       [EditController::class, "getAddForm"]);
 Route::get('/',                          [SelectController::class, "files"]);
 Route::get('/{filename}',                [SelectController::class, "file"]);
 Route::get('/page/{number?}',            [SelectController::class, "files"]);
-Route::get('/tag/{tags}',                [SelectController::class, "filesByTags"]);
-Route::get('/tag/{tags}/page/{number?}', [SelectController::class, "filesByTags"]);
+
+Route::get('/search/{tokens}',                [SelectController::class, "search"]);
+Route::get('/search/{tokens}/page/{number?}', [SelectController::class, "search"]);
 
 Route::post("/add",    [EditController::class, "add"]);
 Route::post("/edit",   [EditController::class, "edit"]);
