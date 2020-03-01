@@ -106,6 +106,24 @@ class AddFile extends \Tests\TestCase
         
         $this->assertFalse($result);
     }
+
+    /**
+     * Filename is a hidden tag, if a passed tag equals filename,
+     * the file will be without visible tags
+     * @test
+     * @return void
+     */
+    public function tagsEqualsName() : void
+    {
+        $request = new \App\Http\Requests\NewFile;
+        $request->files->set(Literal::fileField(), $this->fakeFile->file());
+
+        $result = $this->validateField(Literal::tagsField(),
+                                       $this->fakeFile->name(),
+                                       $request);
+        
+        $this->assertFalse($result);
+    }
     
     /**
      * Checks if add request contains a unique file
