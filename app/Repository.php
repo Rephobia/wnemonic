@@ -73,17 +73,17 @@ class Repository
         return new FileViewIterator ($paginator, $this->filesystem);
     }
 
-    public function search(string $searchStr, $page) : FileViewIterator
+    public function search(string $tags, $page) : FileViewIterator
     {
-        $searchArr = TagMaker::toArray($searchStr);
+        $tagsArr = TagMaker::toArray($tags);
 
         $query = File::query();
 
-        $query->whereHas("tags", function($query) use ($searchArr)
+        $query->whereHas("tags", function($query) use ($tagsArr)
         {
-            $query->whereIn(Literal::tagsField(), $searchArr);
+            $query->whereIn(Literal::tagsField(), $tagsArr);
             
-        }, "=", count($searchArr));
+        }, "=", count($tagsArr));
         
         $paginator = $query->paginate(self::pageCap, array("*"), "page", $page);
         
