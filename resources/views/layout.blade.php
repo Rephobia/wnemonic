@@ -7,7 +7,7 @@
     </head>
     <body>
 	<header>
-	    @include('header')
+	    @include("header")
 	</header>
 	
 	@if ($errors->any())
@@ -19,7 +19,7 @@
 	@endif
 	
 	<div id="content">
-	    @yield('content')
+	    @yield("content")
 	</div>
 
     </body>
