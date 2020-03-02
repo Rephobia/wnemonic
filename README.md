@@ -3,7 +3,7 @@ Wnemonic is a self-hosted file manager with tags.
 
 ### Dependencies
 - **php** 7
-- **Laravel** 5
+- **Laravel** 6
 - **Composer**
 - **Node** (wnemonic uses less preprocessor to create css)
 - Your preferred db and web server (I uses nginx and postgresql)
@@ -14,6 +14,7 @@ Wnemonic is a self-hosted file manager with tags.
 	npm run prod 
 	php artisan key:generate
 	php artisan migrate
+	php artisan make:password # password is used to change site content (add, edit)
 
 #### Then you need to manage folder permissions, e.g:
 	chown -R USER:www-data /path/to/your/project/storage 
