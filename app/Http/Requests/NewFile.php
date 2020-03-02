@@ -39,7 +39,7 @@ class NewFile extends BasicRequest
     public function rules() : array
     {
         $fileRules = (new FileRule($this))->required()->isFile()->unique();
-        $tagsRules = (new FileRule($this))->required()->equalField(Literal::fileField());
+        $tagsRules = (new FileRule($this))->required()->equalFileField(Literal::fileField());
         $passRules = (new FileRule($this))->checkPass();
 
         return array(Literal::fileField() => $fileRules,
