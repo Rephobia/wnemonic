@@ -28,6 +28,5 @@ Route::get("/search/{tags}/page/{number?}", [SelectController::class, "search"])
 Route::post("/add",    [EditController::class, "add"]);
 Route::post("/edit",   [EditController::class, "edit"]);
 Route::post("/delete", [EditController::class, "delete"]);
-Route::post("/cancel", [EditController::class, "cancel"]);
 
 Route::post("/search", [SelectController::class, "redirectToSearch"]);

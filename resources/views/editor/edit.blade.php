@@ -27,7 +27,7 @@
 	    <div class="control">
 		<button type="reset">Reset</button>
 		<button type="submit" formaction="/edit">Save</button>
-		<button type="submit" formaction="/cancel">Cancel</button>
+		<a href={{ $cancelLink }}>Cancel</a>
 		<button class="delete" type="submit" formaction="/delete">Delete</button>
 	    </div>
 	    
