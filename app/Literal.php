@@ -51,6 +51,11 @@ class Literal
     {
         return "pass";
     }
+    
+    public static function searchField() : string
+    {
+        return "search";
+    }
 
     public static function passwordKey() : string
     {
