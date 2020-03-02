@@ -35,10 +35,12 @@ class TagMaker
     {
         $delimeted = explode(self::delimeter, $tags);
 
-        $callback = array(__CLASS__, "normalize");
+        $tagsArr = array();
         
-        $tagsArr = array_map($callback, $delimeted);
-
+        foreach ($delimeted as $tag) {
+            array_push($tagsArr, self::normalize($tag));
+        }
+        
         foreach ($extraTags as $tag) {
             array_push($tagsArr, self::normalize($tag));
         }

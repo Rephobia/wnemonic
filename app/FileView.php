@@ -75,11 +75,8 @@ class FileView
 
                 $tagName = $tag[\App\Literal::tagsField()];
                 
-                if ($tagName !== $this->name()) {
+                array_push($this->tags, $tagName);
                     
-                    array_push($this->tags, $tagName);
-                    
-                }
             }
         }
         

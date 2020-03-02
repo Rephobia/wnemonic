@@ -13,7 +13,7 @@
 		<span class="time"> {{ $file->updated()}} </span>
 	    </div>
 	    
-	    @include("tags", ["tags" => $file->tags()])
+	    @include("tags", array("file" => $file))
 	    
 	</li>
 	
