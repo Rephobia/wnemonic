@@ -42,7 +42,7 @@ class EditFile extends BasicRequest
         
         $newnameRules = (new FileRule($this))->required()->unique(Literal::nameField());
         
-        $tagsRules = (new FileRule($this))->required();
+        $tagsRules = (new FileRule($this))->required()->equalField(Literal::newnameField());
         
         $passRules = (new FileRule($this))->checkPass();
         

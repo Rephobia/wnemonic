@@ -1,8 +1,10 @@
 <div class="tags">
     
-    @foreach ($tags as $tag)
+    @foreach ($file->tags() as $tag)
 	
-	<a class="tag" href={{ url("tag/".$tag) }}> {{ $tag }}</a>
+	@if ($tag !== $file->name()) 
+	    <a class="tag" href={{ url("search/".$tag) }}> {{ $tag }}</a>
+	@endif
 	
     @endforeach
     

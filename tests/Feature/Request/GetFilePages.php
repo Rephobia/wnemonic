@@ -88,23 +88,23 @@ class GetFilePages extends \Tests\TestCase
     }
 
     /**
-     * Checks if tags page exist
+     * Checks if search page exist
      * @test
      * @return void
      */
-    public function tagsExists() : void
+    public function searchExists() : void
     {        
-        $this->get("/tag/".$this->fakeFile->tags())
+        $this->get("/search/".$this->fakeFile->tags())
              ->assertStatus(200);
     }
     /**
-     * Checks if tags page doesn't exist, but empty page shows
+     * Checks if search page doesn't exist, but empty page shows
      * @test
      * @return void
      */
-    public function tagsNotExists() : void
+    public function searchNotExists() : void
     {        
-        $this->get("/tag/notExistsTag")
+        $this->get("/search/notExistsTag")
              ->assertStatus(200);
     }
 }
