@@ -150,7 +150,7 @@ class Repository
     private function updateTags(File $file, string $newTags) : void
     {
         $tags = TagMaker::toArray($newTags, $file->name);
-
+        
         $tagsId = array();
         foreach ($tags as $rawTag) {
             $tag = Tags::firstOrCreate([Literal::tagsField() => $rawTag]);

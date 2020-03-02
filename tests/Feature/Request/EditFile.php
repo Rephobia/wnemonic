@@ -44,6 +44,8 @@ class EditFile extends \Tests\TestCase
         parent::setUp();
         
         $this->fakeFile = new FakeFile;
+        $this->repository = \App::make(\App\Repository::class);
+
     }
     
     /**
@@ -85,7 +87,11 @@ class EditFile extends \Tests\TestCase
                           Literal::tagsField() => $newTags,
                           Literal::passField() => self::TEST_PASSWORD));
         
-        $this->assertFile($newName, $newTags);
+        $fileView = $this->repository->get($newName);
+        
+        $this->assertNotEmpty($fileView);
+        $this->assertEqualsCanonicalizing($fileView->tags(),
+                                          TagMaker::toArray($newTags, $newName));
     }
 
     /**
@@ -105,8 +111,12 @@ class EditFile extends \Tests\TestCase
                           Literal::newnameField() => $newName,
                           Literal::tagsField() => $newTags,
                           Literal::passField() => self::TEST_PASSWORD));
+
+        $fileView = $this->repository->get($newName);
         
-        $this->assertFile($newName, $newTags);
+        $this->assertNotEmpty($fileView);
+        $this->assertEqualsCanonicalizing($fileView->tags(),
+                                          TagMaker::toArray($newTags, $newName));
     }
     
     /**
@@ -119,15 +129,18 @@ class EditFile extends \Tests\TestCase
         Seeder::seedFile($this->fakeFile);
 
         $newName = $this->fakeFile->name();
-        $newTags = $this->fakeFile->tags().",newTag";
-        
+        $newTags = $this->fakeFile->tags().",changeTag";
         $this->post("/edit",
                     array(Literal::nameField() => $newName,
                           Literal::newnameField() => $newName,
                           Literal::tagsField() => $newTags,
                           Literal::passField() => self::TEST_PASSWORD));
+
+        $fileView = $this->repository->get($newName);
         
-        $this->assertFile($newName, $newTags);
+        $this->assertNotEmpty($fileView);
+        $this->assertEqualsCanonicalizing($fileView->tags(),
+                                          TagMaker::toArray($newTags, $newName));
     }
     
     /**
@@ -146,8 +159,12 @@ class EditFile extends \Tests\TestCase
                     array(Literal::nameField() => $newName,
                           Literal::newnameField() => $newName,
                           Literal::tagsField() => $newTags));
+
+        $fileView = $this->repository->get($newName);
         
-        $this->assertFile($newName, $newTags);
+        $this->assertNotEmpty($fileView);
+        $this->assertEqualsCanonicalizing($fileView->tags(),
+                                          TagMaker::toArray($newTags, $newName));
     }
 
     /**
@@ -303,15 +320,10 @@ class EditFile extends \Tests\TestCase
                                       Literal::tagsField() => "{$newTags},{$newTags}",
                                       Literal::passField() => self::TEST_PASSWORD));
 
-        $this->assertFile($newName, $newTags);
-    }
-        
-    private function assertFile($fileName, $tags)
-    {
-        $repository = \App::make(\App\Repository::class);
-        $fileView = $repository->get($fileName);
+        $fileView = $this->repository->get($newName);
         
         $this->assertNotEmpty($fileView);
-        $this->assertEquals($fileView->tags(), TagMaker::toArray($tags));
+        $this->assertEqualsCanonicalizing($fileView->tags(),
+                                          TagMaker::toArray($newTags, $newName));
     }
 }

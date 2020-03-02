@@ -188,6 +188,7 @@ class AddFile extends \Tests\TestCase
         
         $fileView = $this->repository->get($newName);
         
-        $this->assertEquals($fileView->tags(), TagMaker::toArray($newTags));
+        $this->assertEqualsCanonicalizing($fileView->tags(),
+                                          TagMaker::toArray($newTags, $newName));
     }
 }
