@@ -27,6 +27,7 @@ namespace Tests\Feature\Request;
 
 use \App\Literal;
 use \App\Utils\FileInfo;
+use \App\Utils\TagMaker;
 
 use \Tests\Feature\Seeder;
 use \Tests\Feature\FakeFile;
@@ -35,6 +36,8 @@ use \Tests\Feature\FakeFile;
 class AddFile extends \Tests\TestCase
 {
     private FakeFile $fakeFile;
+    private \App\Repository $repository;
+
     
     use \Illuminate\Foundation\Testing\RefreshDatabase;
     use \Tests\Feature\Request\ValidateField;
@@ -43,6 +46,7 @@ class AddFile extends \Tests\TestCase
     {
         parent::setUp();
         $this->fakeFile = new FakeFile;
+        $this->repository = \App::make(\App\Repository::class);
     }
     
     /**
@@ -71,7 +75,10 @@ class AddFile extends \Tests\TestCase
                     array(Literal::fileField() => $this->fakeFile->file(),
                           Literal::tagsField() => $this->fakeFile->tags(),
                           Literal::passField() => self::TEST_PASSWORD));
-   
+
+        $fileView = $this->repository->get($this->fakeFile->name());
+        
+        $this->assertNotEmpty($fileView);
         \Storage::assertExists(FileInfo::hashPath($this->fakeFile->name()));
     }
     
@@ -159,5 +166,28 @@ class AddFile extends \Tests\TestCase
                                        $request);
         
         $this->assertFalse($result);
+    }
+    
+    /**
+     * Tags must be unique, becouse select by tags must be equal tags count
+     * @test
+     * @return void
+     */
+    public function uniqueTags() : void
+    {
+        Seeder::seedFile($this->fakeFile);
+
+        $newName = $this->fakeFile->name()."newName";
+        $newTags = $this->fakeFile->tags().",newTag";
+        
+        $response = $this->post("/edit",
+                                array(Literal::nameField() => $this->fakeFile->name(),
+                                      Literal::newnameField() => $newName,
+                                      Literal::tagsField() => "{$newTags},{$newTags}",
+                                      Literal::passField() => self::TEST_PASSWORD));
+        
+        $fileView = $this->repository->get($newName);
+        
+        $this->assertEquals($fileView->tags(), TagMaker::toArray($newTags));
     }
 }

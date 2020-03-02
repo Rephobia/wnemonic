@@ -22,35 +22,30 @@
 */
 
 
-namespace App\Utils;
+namespace App\Rules\Units;
 
-    
-class TagMaker
+class EqualFileField extends BasicRule
 {
-    private const delimeter = ",";
-    private const spaceReplace = "_";
 
-
-    public static function toArray(string $tags, string ...$extraTags) : array
+    public function __construct(string $field)
     {
-        $delimeted = explode(self::delimeter, $tags);
-
-        $callback = array(__CLASS__, "normalize");
-        
-        $tagsArr = array_map($callback, $delimeted);
-
-        foreach ($extraTags as $tag) {
-            array_push($tagsArr, self::normalize($tag));
-        }
-        
-        return array_unique($tagsArr);
+        $this->equalField = $field;
     }
 
-    private static function normalize(string $tag) : string
+    public function fails($attribute, $value, $request)
     {
-        $trimmerTag = trim($tag);
-        
-        return str_replace(" ", self::spaceReplace, $trimmerTag);        
+        return $value  === $request->file($this->equalField)->getClientOriginalName();
     }
+
+    /**
+     * Get the validation error message.
+     *
+     * @return string
+     */
+    public function message()
+    {
+        return ":attribute is equal the {$this->equalField} name";
+    }
+    
+    private $equalField;
 }
-

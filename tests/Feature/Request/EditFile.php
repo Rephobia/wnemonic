@@ -267,6 +267,45 @@ class EditFile extends \Tests\TestCase
         $this->assertFalse($result);
     }
     
+    /**
+     * Filename is a hidden tag, if a passed tag equals a new filename,
+     * the file will be without visible tags
+     * @test
+     * @return void
+     */
+    public function tagsEqualsNewName() : void
+    {
+        $request = new \App\Http\Requests\EditFile;
+        $request->merge(array(Literal::newnameField() => $this->fakeFile->name()));
+
+        $result = $this->validateField(Literal::tagsField(),
+                                       $this->fakeFile->name(),
+                                       $request);
+        
+        $this->assertFalse($result);
+    }
+    
+    /**
+     * Tags must be unique, becouse select by tags must be equal tags count
+     * @test
+     * @return void
+     */
+    public function uniqueTags() : void
+    {
+        Seeder::seedFile($this->fakeFile);
+
+        $newName = $this->fakeFile->name()."newName";
+        $newTags = $this->fakeFile->tags().",newTag";
+        
+        $response = $this->post("/edit",
+                                array(Literal::nameField() => $this->fakeFile->name(),
+                                      Literal::newnameField() => $newName,
+                                      Literal::tagsField() => "{$newTags},{$newTags}",
+                                      Literal::passField() => self::TEST_PASSWORD));
+
+        $this->assertFile($newName, $newTags);
+    }
+        
     private function assertFile($fileName, $tags)
     {
         $repository = \App::make(\App\Repository::class);
