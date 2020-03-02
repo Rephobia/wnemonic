@@ -1,7 +1,5 @@
 @extends("layout")
 
-@section("title", "wnemonic")
-
 @section("content")
 
     @foreach($files as $file)
