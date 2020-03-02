@@ -31,25 +31,25 @@ use App\Utils\FileInfo;
 
 class FileView
 {
-    public function __construct($data, $filesystem)
+    public function __construct($file, $filesystem)
     {
-        $this->data = $data;
+        $this->file = $file;
         $this->filesystem = $filesystem;
     }
     
     public function name() : string
     {
-        return $this->data->name;
+        return $this->file->name;
     }
     public function updated()
     {
-        return $this->data->updated_at;
+        return $this->file->updated_at;
     }
 
 
     public function path() : string
     {
-        return FileInfo::hashPath($this->data->name);
+        return FileInfo::hashPath($this->file->name);
     }
     
     public function link() : string
@@ -71,8 +71,12 @@ class FileView
     {
         if (empty($this->tags)) {
             
-            foreach ($this->data->tags as $tag) {
-                array_push($this->tags, $tag["tag"]);
+            foreach ($this->file->tags as $tag) {
+
+                $tagName = $tag[\App\Literal::tagsField()];
+                
+                array_push($this->tags, $tagName);
+                    
             }
         }
         
@@ -90,14 +94,14 @@ class FileView
         $incomer = $trace[1]['class'];
         
         if (isset($incomer) && in_array($incomer, $this->friends)) {
-            return $this->data;
+            return $this->file;
         }
 
         trigger_error("{$incomer} cannot access to private field ".__CLASS__."::".$field,
                       E_USER_ERROR);
     }
     
-    private $data;
+    private $file;
     private $tags = array();
     private $filesystem;
     
