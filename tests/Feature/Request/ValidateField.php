@@ -19,25 +19,27 @@
 
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
-
-namespace App\Http\Requests;
+ */
 
 
-use App\Literal;
-use App\Rules\FileRule;
-use App\Http\Requests\BasicRequest;
+namespace Tests\Feature\Request;
+
+use Illuminate\Support\Facades\Validator;
 
 
-class CheckFile extends BasicRequest
+trait ValidateField
 {
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
-    public function rules() : array
+    public function validateField(string $field, $value, $request) : bool
     {
-        return array(Literal::nameField() => (new FileRule($this))->required()->exists());
-    }    
+        $data = array($field => $value);
+        $rules = array($field=> $request->rules()[$field]);
+
+        $validator = Validator::make($data, $rules);
+
+        return $validator->passes();
+    }
 }
+
+
+
+

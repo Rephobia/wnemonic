@@ -29,9 +29,12 @@ use Illuminate\Contracts\Validation\ImplicitRule;
 use App\Rules\Units\BasicRule;
 use App\Rules\Units\Required;
 use App\Rules\Units\EqualField;
+use App\Rules\Units\EqualFileField;
 use App\Rules\Units\IsFile;
 use App\Rules\Units\Unique;
 use App\Rules\Units\Exists;
+use App\Rules\Units\CheckPass;
+
 
 
 class FileRule implements ImplicitRule
@@ -87,6 +90,11 @@ class FileRule implements ImplicitRule
     {
         return $this->appendRule(new EqualField($field));
     }
+    
+    public function equalFileField(string $field)
+    {
+        return $this->appendRule(new EqualFileField($field));
+    }
 
     public function exists()
     {        
@@ -101,6 +109,11 @@ class FileRule implements ImplicitRule
     public function isFile()
     {
         return $this->appendRule(new IsFile);
+    }
+    
+    public function checkPass()
+    {
+        return $this->appendRule(new CheckPass);
     }
     
     protected function appendRule(BasicRule $rule)

@@ -24,22 +24,24 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Literal;
+use App\Rules\FileRule;
+use App\Http\Requests\BasicRequest;
 
-class BasicRequest extends FormRequest
+
+class DeleteFile extends BasicRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * Get the validation rules that apply to the request.
      *
-     * @return bool
+     * @return array
      */
-    public function authorize()
+    public function rules() : array
     {
-        return true;
-    }
-
-    public function setRedirect(string $redirect)
-    {
-        $this->redirect = $redirect;
+        $nameRules = (new FileRule($this))->required()->exists();
+        $passRules = (new FileRule($this))->checkPass();
+        
+        return array(Literal::nameField() => $nameRules,
+                     Literal::passField() => $passRules);
     }
 }

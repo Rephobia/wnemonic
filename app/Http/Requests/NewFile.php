@@ -21,12 +21,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-namespace App\Http\Requests;
 
+namespace App\Http\Requests;
 
 use App\Literal;
 use App\Rules\FileRule;
 use App\Http\Requests\BasicRequest;
+
 
 class NewFile extends BasicRequest
 {    
@@ -37,11 +38,13 @@ class NewFile extends BasicRequest
      */
     public function rules() : array
     {
-        $nameRules = (new FileRule($this))->required()->isFile()->unique();
-        $tagRules = (new FileRule($this))->required();
+        $fileRules = (new FileRule($this))->required()->isFile()->unique();
+        $tagsRules = (new FileRule($this))->required()->equalFileField(Literal::fileField());
+        $passRules = (new FileRule($this))->checkPass();
 
-        return array(Literal::nameField() => $nameRules,
-                     Literal::tagField() => $tagRules);
+        return array(Literal::fileField() => $fileRules,
+                     Literal::tagsField() => $tagsRules,
+                     Literal::passField() => $passRules);
     }
   
 }
