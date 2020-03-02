@@ -6,7 +6,7 @@ Wnemonic is a self-hosted file manager with tags.
 - **Laravel** 6
 - **Composer**
 - **Node** (wnemonic uses less preprocessor to create css)
-- Your preferred db and web server (I uses nginx and postgresql)
+- Your preferred db and web server (I use nginx and postgresql)
 
 ### Deploy
 	php composer install
