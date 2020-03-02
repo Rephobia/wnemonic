@@ -22,43 +22,30 @@
 */
 
 
-namespace App;
+namespace App\Rules\Units;
 
-
-class Literal
+class EqualFileField extends BasicRule
 {
-    public static function nameField() : string
+
+    public function __construct(string $field)
     {
-        return "name";
-    }
-    
-    public static function newnameField() : string
-    {
-        return "newname";
-    }
-    
-    public static function tagsField() : string
-    {
-        return "tag";
-    }
-    
-    public static function fileField() : string
-    {
-        return "file";
-    }
-    
-    public static function passField() : string
-    {
-        return "pass";
-    }
-    
-    public static function searchField() : string
-    {
-        return "search";
+        $this->equalField = $field;
     }
 
-    public static function passwordKey() : string
+    public function fails($attribute, $value, $request)
     {
-        return "CONTENT_PASSWORD";
+        return $value  === $request->file($this->equalField)->getClientOriginalName();
     }
+
+    /**
+     * Get the validation error message.
+     *
+     * @return string
+     */
+    public function message()
+    {
+        return ":attribute is equal the {$this->equalField} name";
+    }
+    
+    private $equalField;
 }
