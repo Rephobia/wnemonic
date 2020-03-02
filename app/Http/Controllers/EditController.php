@@ -46,16 +46,14 @@ class EditController extends Controller
         if ($file === NULL) {
             abort(404);
         }
-        session(["cancel_link" => "/".$fileName]);
         
-        return view("editor/edit")->with("file", $file);
+        return view("editor/edit", array("file" => $file,
+                                         "cancelLink" => "/{$fileName}"));
     }
 
     public function getAddForm()
     {
-        session(["cancel_link" => url()->previous()]);
-        
-        return view("editor/add");
+        return view("editor/add")->with("cancelLink", url()->previous());
     }
     
     public function edit(EditFile $request)
@@ -88,10 +86,5 @@ class EditController extends Controller
         return redirect("/");
     }
     
-    public function cancel()
-    {
-        return redirect(session("cancel_link"));
-    }
-
     private $repository;
 }

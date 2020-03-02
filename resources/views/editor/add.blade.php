@@ -23,7 +23,7 @@
 	    <div class="control">
 		<button type="reset">Reset</button>
 		<button type="submit" formaction="/add">Save</button>
-		<button type="submit" formaction="/cancel">Cancel</button>
+		<a href={{ $cancelLink }}>Cancel</a>
 	    </div>
 	    
 	</form>
