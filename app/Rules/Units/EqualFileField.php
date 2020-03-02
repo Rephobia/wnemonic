@@ -22,24 +22,30 @@
 */
 
 
-namespace App\Http\Requests;
+namespace App\Rules\Units;
 
-use Illuminate\Foundation\Http\FormRequest;
-
-class BasicRequest extends FormRequest
+class EqualFileField extends BasicRule
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
+
+    public function __construct(string $field)
     {
-        return true;
+        $this->equalField = $field;
     }
 
-    public function setRedirect(string $redirect)
+    public function fails($attribute, $value, $request)
     {
-        $this->redirect = $redirect;
+        return $value  === $request->file($this->equalField)->getClientOriginalName();
     }
+
+    /**
+     * Get the validation error message.
+     *
+     * @return string
+     */
+    public function message()
+    {
+        return ":attribute is equal the {$this->equalField} name";
+    }
+    
+    private $equalField;
 }

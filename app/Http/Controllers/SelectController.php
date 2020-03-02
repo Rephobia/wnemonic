@@ -60,13 +60,19 @@ class SelectController extends Controller
         return view("main")->with("files", $files);
     }
 
-    public function filesByTags(string $tags, int $page = 1)
+    public function search(string $tags = "", int $page = 1)
     {
-        $files = $this->repository->filesByTags($tags, $page);
+        $files = $this->repository->search($tags, $page);
         
-        return view("main")->with("files", $files);
+        return view("main", array("files" => $files, "tags" =>$tags));
+    }
+
+    public function redirectToSearch(Request $request)
+    {
+        $tags = $request->input(Literal::searchField());
+        
+        return empty($tags) ? redirect("/") : redirect("/search/{$tags}");
     }
     
-
     private $repository;
 }

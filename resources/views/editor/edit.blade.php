@@ -16,13 +16,18 @@
 	    
 	    <div class="named-input">
 		<label>Tags:</label>
-		<input type="text" name={{ \App\Literal::tagField() }} value={{ $file->tagsString() }}>
+		<input type="text" name={{ \App\Literal::tagsField() }} value={{ $file->tagsString() }}>
+	    </div>
+	    
+	    <div class="named-input">
+		<label>Pass:</label>
+		<input type="password" name={{ \App\Literal::passField() }}>
 	    </div>
 	    
 	    <div class="control">
 		<button type="reset">Reset</button>
 		<button type="submit" formaction="/edit">Save</button>
-		<button type="submit" formaction="/cancel">Cancel</button>
+		<a href={{ $cancelLink }}>Cancel</a>
 		<button class="delete" type="submit" formaction="/delete">Delete</button>
 	    </div>
 	    

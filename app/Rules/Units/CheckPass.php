@@ -22,24 +22,25 @@
 */
 
 
-namespace App\Http\Requests;
+namespace App\Rules\Units;
 
-use Illuminate\Foundation\Http\FormRequest;
-
-class BasicRequest extends FormRequest
+class CheckPass extends BasicRule
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
+    public function fails($attribute, $value)
     {
-        return true;
+        $pass = env(\App\Literal::passwordKey());
+        
+        return !password_verify($value, $pass);
     }
 
-    public function setRedirect(string $redirect)
+    /**
+     * Get the validation error message.
+     *
+     * @return string
+     */
+    public function message()
     {
-        $this->redirect = $redirect;
+        return "password is wrong";
     }
+
 }
