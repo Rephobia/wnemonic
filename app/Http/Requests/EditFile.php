@@ -21,15 +21,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+
 namespace App\Http\Requests;
 
 use App\Literal;
 use App\Rules\FileRule;
 use App\Http\Requests\BasicRequest;
 
+
 class EditFile extends BasicRequest
 {
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -41,11 +42,14 @@ class EditFile extends BasicRequest
         
         $newnameRules = (new FileRule($this))->required()->unique(Literal::nameField());
         
-        $tagRules = (new FileRule($this))->required();
+        $tagsRules = (new FileRule($this))->required()->equalField(Literal::newnameField());
+        
+        $passRules = (new FileRule($this))->checkPass();
         
         $rules = array(Literal::nameField() => $nameRules,
                        Literal::newnameField() => $newnameRules,
-                       Literal::tagField() => $tagRules);
+                       Literal::tagsField() => $tagsRules,
+                       Literal::passField() => $passRules);
         
         return $rules;
     }

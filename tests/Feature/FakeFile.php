@@ -19,27 +19,42 @@
 
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
+ */
 
 
-namespace App\Http\Requests;
+namespace Tests\Feature;
 
-use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\UploadedFile;
 
-class BasicRequest extends FormRequest
+class FakeFile
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
+    public function __construct($name = "fileName", $tags = "tag1, tag2", $kilobytes = 1024)
     {
-        return true;
+        $this->name = $name;
+        $this->tags = $tags;
+        $this->kilobytes = $kilobytes;
+        
+        $this->file = UploadedFile::fake()->create($this->name, $this->kilobytes);
     }
-
-    public function setRedirect(string $redirect)
+    public function file() : UploadedFile
     {
-        $this->redirect = $redirect;
+        return $this->file;
     }
+    public function name() : string
+    {
+        return $this->name;
+    }
+    public function tags() : string
+    {
+        return $this->tags;
+    }
+    public function size() : int
+    {
+        return $this->size;
+    }
+    
+    private string $name;
+    private string $tags;
+    private int $kilobytes;
+    private UploadedFile $file;
 }

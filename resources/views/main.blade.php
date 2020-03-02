@@ -1,7 +1,5 @@
 @extends("layout")
 
-@section("title", "wnemonic")
-
 @section("content")
 
     @foreach($files as $file)
@@ -13,7 +11,7 @@
 		<span class="time"> {{ $file->updated()}} </span>
 	    </div>
 	    
-	    @include("tags", ["tags" => $file->tags()])
+	    @include("tags", array("file" => $file))
 	    
 	</li>
 	
