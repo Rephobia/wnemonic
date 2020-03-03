@@ -2,21 +2,30 @@
 
 @section("content")
 
+
+    @php
+    $fileName = $file->name();
+    
+    $tags= implode(",", array_filter($file->tags(), function($tag) use ($fileName)
+                                                    {
+                                                        return $tag !== $fileName;
+                                                    }));
+    @endphp
     <div class="editor">
 	
 	<form method="post">
 	    @csrf
-
-	    <input type="hidden" name={{ \App\Literal::nameField() }} value={{ $file->name() }}>
+	    
+	    <input type="hidden" name={{ \App\Literal::nameField() }} value={{ $fileName }}>
 	    
 	    <div class="named-input">
 		<label>Name:</label>
-		<input type="text" name={{ \App\Literal::newnameField() }} value={{ $file->name() }}>
+		<input type="text" name={{ \App\Literal::newnameField() }} value={{ $fileName }}>
 	    </div>
 	    
 	    <div class="named-input">
 		<label>Tags:</label>
-		<input type="text" name={{ \App\Literal::tagsField() }} value={{ $file->tagsString() }}>
+		<input type="text" name={{ \App\Literal::tagsField() }} value={{ $tags }}>
 	    </div>
 	    
 	    <div class="named-input">
