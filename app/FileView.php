@@ -82,12 +82,7 @@ class FileView
         
         return $this->tags;
     }
-    
-    public function tagsString() : string
-    {
-        return implode(",", $this->tags());
-    }
-    
+        
     public function __get($field)
     {
         $trace = debug_backtrace();
